@@ -1,5 +1,5 @@
 # Lase
-#### `A python library for simulation and control of laser sensors`
+#### `Python API for the Koheron Lase board`
 
 ## Requirements
 
