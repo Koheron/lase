@@ -1,4 +1,7 @@
 # Lase
+
+[![Circle CI](https://circleci.com/gh/Koheron/lase/tree/master.svg?style=shield)](https://circleci.com/gh/Koheron/lase/tree/master)
+
 #### `Python API for the Koheron Lase board`
 
 ## Requirements
