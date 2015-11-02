@@ -22,6 +22,8 @@ python interface.py
 
 ## Lase API : basic simulation example
 
+Lase API can run in simulation mode i.e. without any connection to a real board :
+
 ```python
 from lase.drivers import OscilloSimu
 import numpy as np
