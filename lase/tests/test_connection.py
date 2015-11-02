@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Aug 19 09:54:25 2015
 
-@author: JM
-"""
 import os
+import pytest
 from lase.core import KClient
 from lase.core import ZynqSSH
 from lase.drivers import Oscillo
 
+@pytest.mark.real
 class TestConnection:
       
     def test(self):
         current_path = os.getcwd()
         bitstreams_path = os.path.join(current_path,'bitstreams')
-        host = '192.168.1.4'
+        host = os.getenv('HOST','192.168.1.100')
         client = KClient(host)        
         assert client.is_connected
         ssh = ZynqSSH(host, 'koheron')
