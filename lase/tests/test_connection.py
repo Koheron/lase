@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
+import pytest
 from lase.core import KClient
 from lase.core import ZynqSSH
 from lase.drivers import Oscillo
 
+@pytest.mark.real
 class TestConnection:
       
     def test(self):
