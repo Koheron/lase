@@ -1,5 +1,7 @@
 # Lase
 
+[![Join the chat at https://gitter.im/Koheron/lase](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Koheron/lase?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Circle CI](https://circleci.com/gh/Koheron/lase/tree/master.svg?style=shield)](https://circleci.com/gh/Koheron/lase/tree/master)
 
 #### `Python API for the Koheron Lase board`
