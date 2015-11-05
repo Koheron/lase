@@ -5,7 +5,6 @@
 
 import socket
 import struct
-from tabulate import tabulate
 from rcv_send import recv_timeout, recv_n_bytes, recv_buffer, send_handshaking
 
 # --------------------------------------------
