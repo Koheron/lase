@@ -20,9 +20,12 @@ class SpectrumSimu(LaseSimu):
         self.reset()
     
     def get_spectrum(self):
-        pass
+        self.update()
+        adc = self.model.adc_from_voltage(
+            self.model.photodetection_voltage(
+            self.model._optical_attenuation * self._live_laser_power),
+            n_avg=1)
+        self.spectrum = np.abs(np.fft.fft(adc))
         
-
     def set_demod(self):
         pass
-        

@@ -14,13 +14,10 @@ class LaseSimu(object):
         
     """
     
-    def __init__(self, n):
-        
+    def __init__(self, n):        
          
-        self.max_current = 50 # mA
-        
-        self.sampling = Sampling(n, 125e6)
-        
+        self.max_current = 50 # mA        
+        self.sampling = Sampling(n, 125e6)        
         self.opened = True
  
         self.dac = np.zeros((2,self.sampling.n)) # V
