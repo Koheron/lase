@@ -2,8 +2,6 @@
 # Client API for the OSCILLO device
 # (c) Koheron 2014-2015 
 
-from kclient import reference_dict
-
 from device import Device, command
 
 class Oscillo(Device):
