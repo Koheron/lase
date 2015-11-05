@@ -9,7 +9,7 @@ class NoiseFloorWidget(QtGui.QWidget):
         super(NoiseFloorWidget, self).__init__()
         
         self.driver = driver      
-        self.noise_floor = np.zeros(self.driver.n)
+        self.noise_floor = np.zeros(self.driver.sampling.n)
         self.layout = QtGui.QVBoxLayout()    
         self.window_layout = QtGui.QVBoxLayout()
   
@@ -44,25 +44,24 @@ class NoiseFloorWidget(QtGui.QWidget):
         self.window[1].setChecked(True)
         
     def calibrate(self):
-        self.noise_floor = np.zeros(self.driver.n)
+        self.noise_floor = np.zeros(self.driver.sampling.n)
         for i in range(100):
             self.driver.get_spectrum()
             self.noise_floor += self.driver.spectrum
         self.noise_floor /= 100
         
     def change_window(self, window):
+        n = self.driver.sampling.n # Number of points in the waveform
         if window == 'Rectangular':
             self.driver.demod[0,:] = 0.5
-            self.driver.set_demod()
         elif window == 'Hanning':
-            self.driver.demod[0,:] = 0.49 * (1-np.cos(2*np.pi*np.arange(self.driver.n)/self.driver.n))
-            self.driver.set_demod()
+            self.driver.demod[0,:] = 0.49 * (1-np.cos(2*np.pi*np.arange(n)/n))
         elif window == 'Hamming':
-            self.driver.demod[0,:] = 0.53836 * (0.46164-np.cos(2*np.pi*np.arange(self.driver.n)/self.driver.n))
-            self.driver.set_demod()
+            self.driver.demod[0,:] = 0.53836 * (0.46164-np.cos(2*np.pi*np.arange(n)/n))
         elif window == 'Blackman':
-            self.driver.demod[0,:] = 0.42659-0.42659*np.cos(2*np.pi*np.arange(self.driver.n)/self.driver.n) + 0.076849*np.cos(4*np.pi*np.arange(self.driver.n)/self.driver.n)
-            self.driver.set_demod()
+            self.driver.demod[0,:] = 0.42659-0.42659*np.cos(2*np.pi*np.arange(n)/n) + \
+                                     0.076849*np.cos(4*np.pi*np.arange(n)/n)
+        self.driver.set_demod()
         
         
     

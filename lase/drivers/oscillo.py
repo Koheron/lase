@@ -77,7 +77,7 @@ class Oscillo(Lase):
     def get_amplitude_transfer_function(self, channel_dac=0, 
                                         channel_adc =0, transfer_avg=100):
         n_freqs = self.sampling.n/2 +1
-        self.amplitude_transfer_function *= 0 # * necessary ?
+        self.amplitude_transfer_function *= 0
         
         for i in range(transfer_avg):
             white_noise = self._white_noise(n_freqs)
