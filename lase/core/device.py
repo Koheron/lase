@@ -1,11 +1,8 @@
-# @file device.py
-#
-# @brief Base class for devices
-#
-# @author Thomas Vanderbruggen <thomas@koheron.com>
-# @date 28/10/2015
-#
+# device.py
+# Base class for devices
+# Thomas Vanderbruggen <thomas@koheron.com>
 # (c) Koheron 2015
+
 
 from kclient import KClient, reference_dict
 
@@ -14,9 +11,15 @@ from kclient import KClient, reference_dict
 # --------------------------------------------
 
 def command(func):
-    def decorator(self, *args):
-        self.client.send_command(self.ref['id'], self.ref[func.__name__], *args)
-        return func(self, *args)
+    """ Decorate commands
+    
+    If the name of the command is CMD_NAME, 
+    then the name of the function must be cmd_name.
+    """
+    def decorator(self, *args, **kwargs):
+        self.client.send_command(self.ref['id'], self.ref[func.__name__], 
+                                 *(args + tuple(kwargs.values())))
+        return func(self, *args, **kwargs)
     return decorator
 
 # --------------------------------------------

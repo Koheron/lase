@@ -1,6 +1,7 @@
 # Temporary files
 
 *.md~
+*.yml~
 *.tex~
 *.qrc~ 
 /tmp

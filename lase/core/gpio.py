@@ -1,68 +1,63 @@
 # gpio.py
-# Client API for the GPIO device
-#
-# (c) Koheron 2014-2015 
+# GPIO interface
+# (c) Koheron 2015 
 
-from kclient import reference_dict
+from device import Device, command
 
-class Gpio:
-    """
-    GPIO driver
-    """
-    def __init__(self, client, map_size = 16 * 4096):
-        self.client = client
+class Gpio(Device):
+    def __init__(self, client):
+        super(Gpio, self).__init__(client)
+        self.open()
+        
+    @command
+    def open(self, map_size = 16 * 4096):
+        pass
 
-        # Dictionnary of references
-        self.ref = reference_dict(self)
-        self.open(map_size)
-        return
-
-    def open(self, map_size):
-        self.client.send_command(self.ref['id'], self.ref['open'], map_size)
-
+    @command
     def set_bit(self, index, channel = 1):
         """
         Args:
             index: Position of the bit to set
             channel: GPIO channel
         """
-        self.client.send_command(self.ref['id'], self.ref['set_bit'], index, channel)
+        pass
 
+    @command
     def clear_bit(self, index, channel = 1):
         """
         Args:
-            index: Position of the bit to erase
+            index: Position of the bit to clear
             channel: GPIO channel
         """
-        self.client.send_command(self.ref['id'], self.ref['clear_bit'], index, channel)
+        pass
 
+    @command
     def toggle_bit(self, index, channel = 1):
         """
-        Toggle a bit
-
         Args:
-            index: Position of the bit to set
+            index: Position of the bit to toggle
             channel: GPIO channel
         """
-        self.client.send_command(self.ref['id'], self.ref['toggle_bit'], index, channel)
+        pass
 
+    @command
     def set_as_input(self, index, channel = 1):
-        """
-        Set a bit direction as input
+        """ Set a bit direction as input
 
         Args:
             index: Position of the bit to set
             channel: GPIO channel
         """
-        self.client.send_command(self.ref['id'], self.ref['set_as_input'], index, channel)
+        pass
 
+    @command
     def set_as_output(self, index, channel = 1):
-        """
-        Set a bit direction as output
+        """ Set a bit direction as output
 
         Args:
             index: Position of the bit to set
             channel: GPIO channel
         """
-        self.client.send_command(self.ref['id'], self.ref['set_as_output'], index, channel)
+        pass
+
 
