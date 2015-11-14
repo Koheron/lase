@@ -32,7 +32,7 @@ import matplotlib.pyplot as plt
 driver = OscilloSimu()
 
 # Set laser current to 30 mA
-current = 30 mA
+current = 30 # mA
 driver.set_laser_current(current)
 print 'Laser power = ', driver.get_laser_power(), 'a.u.'
 
