@@ -41,10 +41,8 @@ class WelcomeWidget(QtGui.QWidget):
         self.oscillo_button = self.set_button('Oscillo (Simu)')
         self.spectrum_button = self.set_button('Spectrum (Simu)')
       
-        self.ip_box = QtGui.QGroupBox("IP address")
         self.connect_widget = ConnectWidget(self, self.ip_path)
         self.ip_layout.addWidget(self.connect_widget)
-        self.ip_box.setLayout(self.ip_layout)     
        
         # Create and fill a QWebView
         self.view = QWebView()
@@ -54,7 +52,7 @@ class WelcomeWidget(QtGui.QWidget):
        
         self.left_layout.addWidget(self.view)
 
-        self.right_layout.addWidget(self.ip_box,0)
+        self.right_layout.addWidget(self.connect_widget,0)
         self.right_layout.addWidget(self.oscillo_button,1,QtCore.Qt.AlignCenter)
         self.right_layout.addWidget(self.spectrum_button,1,QtCore.Qt.AlignCenter)
         self.right_layout.addStretch(1)
