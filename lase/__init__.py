@@ -15,7 +15,3 @@ __version__ = '0.0.0'
 __author__ = "Koheron SAS"
 __license__ = "MIT"
 __copyright__ = 'Copyright 2015 Koheron SAS'
-
-from .core import *
-from .drivers import *
-from .gui import *
