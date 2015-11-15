@@ -119,7 +119,6 @@ class ConnectWidget(QtGui.QWidget):
                 self.connect_button.setText('Disconnect')
                 self.parent.connected()
                 self.password = str(self.password_widget.text())
-                print self.password
                 self.ssh = ZynqSSH(self.host, self.password)
 
             else:
