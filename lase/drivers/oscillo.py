@@ -16,13 +16,24 @@ class Oscillo(Lase):
         n = 8192
         super(Oscillo, self).__init__(n, client, map_size = 4096, 
                                       current_mode = 'pwm')
-       
-        self._osc = CoreOscillo(self.client, self.n)
+
+        # \address
+        _adc_1_addr = int('0x40000000',0)
+        _adc_2_addr = int('0x42000000',0)
+        # \end
+        
+        # \offset
+        self._avg_off = 24   
+        # \end         
+
+        # Add memory maps
+        self._adc_1    = self.dvm.add_memory_map(_adc_1_addr   , self.n/1024*map_size)
+        self._adc_2    = self.dvm.add_memory_map(_adc_2_addr   , self.n/1024*map_size)
        
         self.avg_on = False
 
         self.adc = np.zeros((2,self.n))
-        self.spectrum = np.zeros((2,self.n/2))        
+        self.spectrum = np.zeros((2,self.n/2))
         self.avg_spectrum = np.zeros((2,self.n/2))
         self.ideal_amplitude_waveform = np.zeros(self.n)
 
@@ -44,21 +55,28 @@ class Oscillo(Lase):
         self.set_averaging(self.avg_on)
         
     def set_averaging(self, avg_on, reset=True):
-        self._osc.set_averaging(avg_on)
-        if reset:
-            self.reset_acquisition()
+        self.avg_on = avg_on
+        if self.avg_on:
+            self.dvm.clear_bit(self._config, self._avg_off,13)
+        else:
+            self.dvm.set_bit(self._config, self._avg_off,13)
 
     def get_adc(self):
-        tmp = self._osc.read_all()
-        self.adc[0,:] = tmp[0:self.sampling.n]
-        self.adc[1,:] = tmp[self.sampling.n:2*self.sampling.n]
-        
-        # Offsets could be calibrated from the C++ driver
+        self.dvm.set_bit(self._config, self._addr_off,1) 
+        time.sleep(0.001)
+        self.adc[0,:] = self.dvm.read_buffer(self._adc_1,0,self.n)
+        self.adc[1,:] = self.dvm.read_buffer(self._adc_2,0,self.n)
+        self.adc = np.mod(self.adc-2**31,2**32)-2**31
+        if self.avg_on:
+            # TODO
+            #n_avg = self.dvm.read(self._config,self._n_avg_off)
+            n_avg = 1
+            self.adc /= np.float(n_avg)
+        self.dvm.clear_bit(self._config, self._addr_off,1)
         self.adc[0,:] -= self.adc_offset[0]
         self.adc[1,:] -= self.adc_offset[1]
-        
-        self.adc[0,:] *= self.optical_power[0] / self.power[0]
-        self.adc[1,:] *= self.optical_power[1] / self.power[1]
+        self.adc[0,:] *= self.optical_power[0] /self.power[0]
+        self.adc[1,:] *= self.optical_power[1] /self.power[1]
         
     def _white_noise(self, n_freqs, n_stop=None):
         if n_stop == None:
