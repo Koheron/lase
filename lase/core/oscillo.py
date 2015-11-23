@@ -2,15 +2,16 @@
 # Client API for the OSCILLO device
 # (c) Koheron 2014-2015 
 
-from device import Device, command
+from device import command
 
-class Oscillo(Device):
+class Oscillo(object):
     def __init__(self, client, waveform_size):
-        super(Oscillo, self).__init__(client)
+        self.client = client
+        self.ref = reference_dict(self)
         
-        const_ip_addr = int('0x43C00000',0)
-        adc_1_addr = int('0x40000000',0)
-        adc_2_addr = int('0x42000000',0)
+        config_addr = int('0x60000000',0)
+        adc_1_addr  = int('0x42000000',0)
+        adc_2_addr  = int('0x44000000',0)
         self.open(const_ip_addr, adc_1_addr, adc_2_addr, waveform_size)
         
         self.waveform_size = waveform_size

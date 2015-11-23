@@ -21,12 +21,3 @@ def command(func):
                                  *(args + tuple(kwargs.values())))
         return func(self, *args, **kwargs)
     return decorator
-
-# --------------------------------------------
-# Base class
-# --------------------------------------------
-
-class Device(object):
-    def __init__(self, client):
-        self.client = client
-        self.ref = reference_dict(self)
