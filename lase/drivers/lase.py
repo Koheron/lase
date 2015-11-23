@@ -105,7 +105,7 @@ class Lase(object):
         current = min([current, self.max_current])
         if (self.current_mode=='pwm'):
             voltage = 1.8 / (2.5*100) * current
-            self.dvm.write(self._config,self._pwm0_off, np.floor(voltage/1.8 * 1024))
+            self.dvm.write(self._config,self._pwm3_off, np.floor(voltage/1.8 * 1024))
         elif (self.current_mode=='dac'):
 	        value = np.floor(0.01 * current * 8192)
 	        if (0<value<4096):
