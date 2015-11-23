@@ -24,16 +24,16 @@ class Lase(object):
         self.max_current = 50 # mA
 
         # \address
-        self._config_addr = int('0x43C00000',0)
-        self._dac_addr = int('0x44000000',0)
+        self._config_addr = int('0x60000000',0)
+        self._dac_addr = int('0x40000000',0)
         # \end
 
         # \offset
         self._leds_off = 0
-        self._pwm1_off  = 4
-        self._pwm2_off  = 8
-        self._pwm3_off  = 12
-        self._pwm4_off  = 16
+        self._pwm0_off  = 4
+        self._pwm1_off  = 8
+        self._pwm2_off  = 12
+        self._pwm3_off  = 16
         self._addr_off  = 20
         self._bitstream_id_off = 36
         self._n_avg_off = 40
@@ -68,7 +68,7 @@ class Lase(object):
                                channel_1 = self.laser_current_channel)
         self._xadc.set_averaging(n_avg = 256)
         self.dvm.write(self._config, self._addr_off, 2*2**2)
-        self.dvm.write(self._config, self._avg_off, 8187+no_avg*2**13+ 0*2**14 + 0*2**17)
+        self.dvm.write(self._config, self._avg_off, 8187+1*2**13+ 0*2**14 + 0*2**17)
         self.dvm.clear_bit(self._config, self._addr_off,0)
         self.dvm.clear_bit(self._config, self._addr_off,1)
         self.dvm.set_bit(self._config, self._addr_off,0)
@@ -115,7 +115,6 @@ class Lase(object):
         if warning:
             if np.max(np.abs(self.dac)) >= 1:
                 print 'WARNING : dac out of bounds'
-        self._dac.set_dac(self.dac[0,:], self.dac[1,:])
         dac_data_1 = np.mod(np.floor(8192*self.dac[0,:]) + 8192,16384)+8192
         dac_data_2 = np.mod(np.floor(8192*self.dac[1,:]) + 8192,16384)+8192
         self.dvm.write_buffer(self._dac, 0, dac_data_1 + 65536 * dac_data_2)
