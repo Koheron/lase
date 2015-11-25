@@ -23,26 +23,31 @@ class Lase(object):
         self.current_mode = current_mode
         self.max_current = 50 # mA
 
-        # \address
+        # Addresses of memory maps
         self._config_addr = int('0x60000000',0)
+        self._status_addr = int('0x50000000',0)
         self._dac_addr = int('0x40000000',0)
-        # \end
 
-        # \offset
+        # Config offsets
         self._leds_off = 0
         self._pwm0_off  = 4
         self._pwm1_off  = 8
         self._pwm2_off  = 12
         self._pwm3_off  = 16
         self._addr_off  = 20
+        self._avg1_off  = 24
+        self._avg2_off  = 28
         self._bitstream_id_off = 36
-        self._n_avg_off = 40
-        # \end
+
+        # Status offsets
+        self._n_avg1_off = 0
+        self._n_avg2_off = 0
 
         self.sampling = Sampling(n, 125e6)
 
         # Add memory maps
-        self._config = self.dvm.add_memory_map(self._config_addr, 16 * map_size)
+        self._config = self.dvm.add_memory_map(self._config_addr, map_size)
+        self._status = self.dvm.add_memory_map(self._status_addr, map_size)
         self._dac    = self.dvm.add_memory_map(self._dac_addr, self.n/1024*map_size)
         self._gpio   = Gpio(self.dvm)
         self._xadc   = Xadc(self.dvm)
@@ -68,7 +73,8 @@ class Lase(object):
                                channel_1 = self.laser_current_channel)
         self._xadc.set_averaging(n_avg = 256)
         self.dvm.write(self._config, self._addr_off, 2*2**2)
-        self.dvm.write(self._config, self._avg_off, 8187+1*2**13+ 0*2**14 + 0*2**17)
+        self.dvm.write(self._config, self._avg1_off, 8187+1*2**13+ 0*2**14 + 0*2**17)
+        self.dvm.write(self._config, self._avg2_off, 8187+1*2**13+ 0*2**14 + 0*2**17)
         self.dvm.clear_bit(self._config, self._addr_off,0)
         self.dvm.clear_bit(self._config, self._addr_off,1)
         self.dvm.set_bit(self._config, self._addr_off,0)

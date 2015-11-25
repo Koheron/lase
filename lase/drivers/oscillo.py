@@ -68,8 +68,8 @@ class Oscillo(Lase):
         self.adc = np.mod(self.adc-2**31,2**32)-2**31
         if self.avg_on:
             # TODO
-            #n_avg = self.dvm.read(self._config,self._n_avg_off)
-            n_avg = 1
+            n_avg = self.dvm.read(self._status,self._n_avg1_off)
+            #n_avg = 1
             self.adc /= np.float(n_avg)
         self.dvm.clear_bit(self._config, self._addr_off,1)
         self.adc[0,:] -= self.adc_offset[0]
