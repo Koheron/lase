@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 host = os.getenv('HOST','192.168.1.100')
 password = os.getenv('PASSWORD','changeme')
 ssh = ZynqSSH(host, password)
-ssh.unzip_app()
 ssh.install_instrument('oscillo')
+
 
 def speed_test(host, n_pts=200):
     time_array = np.zeros(n_pts)
@@ -27,7 +27,7 @@ def speed_test(host, n_pts=200):
     for i in range(n_pts):
         for j in range(1):
             #a = driver.get_laser_current()
-            b = driver.get_adc()
+            driver.get_adc()
             for k in range(10):
                pass
                #a = driver.get_laser_current()
@@ -42,9 +42,10 @@ def speed_test(host, n_pts=200):
     plt.plot(time_array)
     driver.close()
 
-hosts = ['192.168.1.{0}'.format(i) for i in [15,8,2]]
+hosts = ['192.168.1.{0}'.format(i) for i in [2]]
 
 for host in hosts:
-    speed_test(host)
+    speed_test(host,n_pts=1000)
 
+plt.ylabel('Time (s)')
 plt.show()

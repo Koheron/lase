@@ -131,7 +131,7 @@ class KClient:
 
         try:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            # self.sock.settimeout(timeout)
+            self.sock.settimeout(timeout)
 
             #   Disable Nagle algorithm for real-time response:
             self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
@@ -150,7 +150,7 @@ class KClient:
 
         if not self.cmds.success:
             # Wait a bit and retry
-            time.sleep(0.1)
+            print("Retry get commands")
             self.cmds = Commands(self)
 
             if not self.cmds.success:
@@ -358,9 +358,14 @@ class Commands:
         msg = recv_timeout(client.sock, 'EOC')
 
         if msg == "RECV_ERR_TIMEOUT":
-            print("Timeout at message reception")
-            self.success = False
-            return
+            print("Timeout at message reception. Retry ...")
+            sent = client.send(make_command(1, 1))
+            msg = recv_timeout(client.sock, 'EOC')
+            if msg == "RECV_ERR_TIMEOUT":
+                print("Timeout at message reception")
+                self.success = False
+                return
+            print("OK")
 
         lines = msg.split('\n')
 

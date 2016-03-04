@@ -64,7 +64,9 @@ def recv_timeout(socket, escape_seq, timeout=5):
 
                 if data.find(escape_seq) > 0:
                     break
-        except:
+        except Exception,e:
+            print("recv_timeout: Failed to receive data") 
+            print str(e)
             pass
 
         # To avoid the program to freeze at connection sometimes

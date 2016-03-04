@@ -3,21 +3,17 @@
 
 import initExample
 import os
-from lase.core import KClient
-
-# Driver to use
-from lase.drivers import Oscillo
-
-# Modules to import
+import time
 import numpy as np
 import matplotlib.pyplot as plt
-import time
+
+from lase.core import KClient, ZynqSSH
+from lase.drivers import Oscillo
 
 # Load the oscillo instrument
 host = os.getenv('HOST','192.168.1.100')
 password = os.getenv('PASSWORD','changeme')
 ssh = ZynqSSH(host, password)
-ssh.unzip_app()
 ssh.install_instrument('oscillo')
 
 # Connect to the instrument

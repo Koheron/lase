@@ -81,11 +81,6 @@ class Oscillo(Base):
                                        data_type='float32')
         # TODO Check reception
 
-    @command('OSCILLO')
-    def speed_test(self, n_outer_loop, n_inner_loop):
-        """ Read all the acquired channels """
-        return self.client.recv_buffer(n_outer_loop)
-
     def get_adc(self):
         data = self.read_all_channels()
 
@@ -153,4 +148,51 @@ class Oscillo(Base):
 
     def set_amplitude_transfer_function(self, amplitude_transfer_function):
         self.amplitude_transfer_function = amplitude_transfer_function
+
+    # Functions used only for speed test :
+
+    @command('OSCILLO')
+    def read_all_channels_decim(self, decim):
+        return self.client.recv_buffer(2 * self.wfm_size / decim,
+                                       data_type='uint32')
+
+    @command('OSCILLO')
+    def read_raw_all(self):
+        return self.client.recv_buffer(2 * self.wfm_size,
+                                       data_type='uint32')
+
+    @command('OSCILLO')
+    def read_zeros(self):
+        return self.client.recv_buffer(2 * self.wfm_size,
+                                       data_type='float32')
+
+    @command('OSCILLO')
+    def read_rambuf(self):
+        return self.client.recv_buffer(2 * self.wfm_size,
+                                       data_type='float32')
+
+    @command('OSCILLO')
+    def read_rambuf_memcpy(self):
+        return self.client.recv_buffer(2 * self.wfm_size,
+                                       data_type='float32')
+
+    @command('OSCILLO')
+    def read_rambuf_mycopy(self):
+        return self.client.recv_buffer(2 * self.wfm_size,
+                                       data_type='float32')
+
+    @command('OSCILLO')
+    def read_mmapbuf_nocopy(self):
+        return self.client.recv_buffer(2 * self.wfm_size,
+                                       data_type='float32')
+
+    @command('OSCILLO')
+    def read_rambuf_mmap_memcpy(self):
+        return self.client.recv_buffer(2 * self.wfm_size,
+                                       data_type='float32')
+
+    @command('OSCILLO')
+    def speed_test(self, n_outer_loop, n_inner_loop, size=8192):
+        return self.client.recv_buffer(n_outer_loop)
+
 
