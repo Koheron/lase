@@ -10,7 +10,7 @@ class StatsWidget(QtGui.QWidget):
 
         self.driver = driver
 
-        self.layout = QtGui.QHBoxLayout()
+        self.layout = QtGui.QGridLayout()
 
         self.mean_labels = []
         self.ampl_labels = []
@@ -35,41 +35,17 @@ class StatsWidget(QtGui.QWidget):
             self.mean_labels.append(QtGui.QLabel(''))
             self.ampl_labels.append(QtGui.QLabel(''))
             self.ampl_rms_labels.append(QtGui.QLabel(''))
-            self.mean_labels[i].setAlignment(QtCore.Qt.AlignCenter)
-            self.ampl_labels[i].setAlignment(QtCore.Qt.AlignCenter)
-            self.ampl_rms_labels[i].setAlignment(QtCore.Qt.AlignCenter)
 
         self.mean_labels[0].setText('Average')
         self.ampl_labels[0].setText('Peak-Peak')
         self.ampl_rms_labels[0].setText('RMS')
 
-        self.boxes = []
-        self.box_names = ['Measures', 'ADC 1', 'ADC 2']
         for i in range(self.n_channels+1):
-            self.boxes.append(QtGui.QGroupBox(self.box_names[i]))
-            self.boxes[i].setAlignment(5)
-
-        self.name_layout = QtGui.QVBoxLayout()
-        self.name_layout.addWidget(self.mean_labels[0])
-        self.name_layout.addWidget(self.ampl_labels[0])
-        self.name_layout.addWidget(self.ampl_rms_labels[0])
-        self.boxes[0].setLayout(self.name_layout)
-
-        self.adc_1_layout = QtGui.QVBoxLayout()
-        self.adc_1_layout.addWidget(self.mean_labels[1])
-        self.adc_1_layout.addWidget(self.ampl_labels[1])
-        self.adc_1_layout.addWidget(self.ampl_rms_labels[1])
-        self.boxes[1].setLayout(self.adc_1_layout)
-
-        self.adc_2_layout = QtGui.QVBoxLayout()
-        self.adc_2_layout.addWidget(self.mean_labels[2])
-        self.adc_2_layout.addWidget(self.ampl_labels[2])
-        self.adc_2_layout.addWidget(self.ampl_rms_labels[2])
-        self.boxes[2].setLayout(self.adc_2_layout)
-
-        for i in range(self.n_channels+1):
-            self.layout.addWidget(self.boxes[i])
-
+            self.layout.addWidget(QtGui.QLabel('DAC '+str(i) if i != 0 else ''), 0, i)
+            self.layout.addWidget(self.mean_labels[i], 1, i)
+            self.layout.addWidget(self.ampl_labels[i], 2, i)
+            self.layout.addWidget(self.ampl_rms_labels[i], 3, i)
+          
     def get_average(self, channel):
         return np.mean(self.driver.adc[channel,:])
 
