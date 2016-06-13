@@ -87,6 +87,23 @@ class LDKdataReader:
         plt.plot(np.transpose(self.data_x), np.transpose(self.data_y))
         plt.show()
 
+    def get_monitor(self):
+        self.monitor = {
+          'FrameRate': self.file['monitor/data'].attrs['FrameRate'],
+          'LaserCurrent': self.file['monitor/data'].attrs['LaserCurrent'],
+          'LaserPower': self.file['monitor/data'].attrs['LaserPower'],
+        }
+
+        return self.monitor
+
+    def print_monitor(self):
+        self.get_monitor()
+
+        print('\n=== Monitor widget ===')
+        print('FrameRate      ' + unicode(self.monitor['FrameRate']))
+        print('LaserCurrent   ' + unicode(self.monitor['LaserCurrent']))
+        print('LaserPower     ' + unicode(self.monitor['LaserPower']))
+
     def __del__(self):
         self.file.close()
 
@@ -96,3 +113,4 @@ if __name__ == "__main__":
     reader.print_math()
     reader.print_select_channel()
     reader.plot_data()
+    reader.print_monitor()

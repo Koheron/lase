@@ -11,6 +11,7 @@ class SaveWidget(QtGui.QWidget):
         self.math_widget = oscillo_widget.math_widget
         self.select_channel_widget = oscillo_widget.select_channel_widget
         self.plot_widget = oscillo_widget.plot_widget
+        self.monitor_widget = oscillo_widget.monitor_widget
         self.driver = oscillo_widget.driver
 
         self.n_channels = self.stats_widget.n_channels
@@ -30,6 +31,7 @@ class SaveWidget(QtGui.QWidget):
                 self._save_math(f)
                 self._save_select_channel(f)
                 self._save_plot(f)
+                self._save_monitor(f)
 
     def _save_stats(self, f):
         stats_grp = f.create_group('stats')
@@ -80,3 +82,10 @@ class SaveWidget(QtGui.QWidget):
         plot_data_x_dset[...] = data_x
         plot_data_y_dset = f.create_dataset('plot/data_y', (self.n_channels, wfm_size), dtype='f')
         plot_data_y_dset[...] = data_y
+
+    def _save_monitor(self, f):
+        monitor_grp = f.create_group('monitor')
+        monitor_dset = f.create_dataset('monitor/data', (0,), dtype='f')
+        monitor_dset.attrs['FrameRate'] = self.monitor_widget.frame_rate
+        monitor_dset.attrs['LaserCurrent'] = self.monitor_widget.laser_current
+        monitor_dset.attrs['LaserPower'] = self.monitor_widget.laser_power
