@@ -47,11 +47,11 @@ class MonitorWidget(QtGui.QWidget):
         self.laser_current = 0.95 * self.laser_current + 0.05 * self.driver.get_laser_current()
         self.laser_power = 0.95 * self.laser_power + 0.05 * self.driver.get_laser_power()
 
-        self.laser_current_label.setText('Measured current (mA) : '+
+        self.laser_current_label.setText('Measured current (mA): '+
                                          "{:.2f}".format(1000 * self.laser_current))
-        self.laser_power_label.setText('Laser power (u.a.) : '+
+        self.laser_power_label.setText('Laser power (a. u.): '+
                                        "{:.2f}".format(self.laser_power))
-        self.frame_rate_label.setText('Frame rate (Hz) : '+
+        self.frame_rate_label.setText('Frame rate (Hz): '+
                                       "{:.2f}".format(frame_rate))
 
     def close_session(self):

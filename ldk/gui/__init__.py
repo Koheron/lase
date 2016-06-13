@@ -13,6 +13,7 @@ from .select_channel_widget import SelectChannelWidget
 from .welcome_widget import WelcomeWidget
 from .spectrum_widget import SpectrumWidget
 from .stats_widget import StatsWidget
+from .save_widget import SaveWidget
 
 __all__ = ['CalibrationWidget',
            'CursorWidget',
@@ -26,5 +27,6 @@ __all__ = ['CalibrationWidget',
            'SelectChannelWidget',
            'WelcomeWidget',
            'SpectrumWidget',
-           'StatsWidget'
+           'StatsWidget',
+           'SaveWidget'
           ]

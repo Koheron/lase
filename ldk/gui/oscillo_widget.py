@@ -11,6 +11,7 @@ from .stats_widget import StatsWidget
 from .select_channel_widget import SelectChannelWidget
 from .math_widget import MathWidget
 from .calibration_widget import CalibrationWidget
+from .save_widget import SaveWidget
 
 
 class OscilloWidget(LaseWidget):
@@ -54,11 +55,17 @@ class OscilloWidget(LaseWidget):
         self.math_box = QtGui.QGroupBox("Math")
         self.math_box.setLayout(self.math_widget.layout)
 
+        # Save
+        self.save_widget = SaveWidget()
+        self.save_box = QtGui.QGroupBox("Save")
+        self.save_box.setLayout(self.save_widget.layout)
+
         # Add widgets to control layout
         self.control_layout.addWidget(self.display_box)
         self.control_layout.addLayout(self.stats_widget.layout)
         self.control_layout.addWidget(self.cursors_box)
         self.control_layout.addWidget(self.math_box)
+        self.control_layout.addWidget(self.save_box)
         self.control_layout.addStretch(1)
         self.control.setLayout(self.control_layout)
 
