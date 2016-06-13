@@ -35,7 +35,10 @@ class LDKdataReader:
           'AvgSpin': {
             'Minimum': self.file['math/avg_spin'].attrs['Minimum'],
             'Maximum': self.file['math/avg_spin'].attrs['Maximum'],
-            'Value': self.file['math/avg_spin'].attrs['Value'],
+            'Value': self.file['math/avg_spin'].attrs['Value']
+          },
+          'Fourier': {
+            'Status': self.file['math/fourier'].attrs['Status']
           }
         }
 
@@ -44,7 +47,7 @@ class LDKdataReader:
     def print_math(self):
         self.get_math()
 
-        print('\n=== Math widget status ===')
+        print('\n=== Math widget ===')
         print('avg_on_button')
         print('  StyleSheet   ' + self.math['AvgOnButton']['StyleSheet'])
         print('  Text         ' + self.math['AvgOnButton']['Text'])
@@ -52,6 +55,28 @@ class LDKdataReader:
         print('  Minimum      ' + unicode(self.math['AvgSpin']['Minimum']))
         print('  Maximum      ' + unicode(self.math['AvgSpin']['Maximum']))
         print('  Value        ' + unicode(self.math['AvgSpin']['Value']))
+        print('fourier')
+        print('  Status       ' + unicode(self.math['Fourier']['Status']))
+
+    def get_select_channel(self):
+        self.select_channel = {
+          'adc_checkbox': self.file['select_channel/adc_checkbox'][()],
+          'dac_checkbox': self.file['select_channel/dac_checkbox'][()]
+        }
+
+        return self.select_channel
+
+    def print_select_channel(self):
+        self.get_select_channel()
+
+        print('\n=== Select channel widget ===')
+        print('ADC')
+        print('  1            ' + unicode(self.select_channel['adc_checkbox'][0]))
+        print('  2            ' + unicode(self.select_channel['adc_checkbox'][1]))
+        print('DAC')
+        print('  1            ' + unicode(self.select_channel['dac_checkbox'][0]))
+        print('  2            ' + unicode(self.select_channel['dac_checkbox'][1]))
+
 
     def __del__(self):
         self.file.close()
@@ -60,3 +85,4 @@ if __name__ == "__main__":
     reader = LDKdataReader('../test.h5')
     reader.print_stats()
     reader.print_math()
+    reader.print_select_channel()
