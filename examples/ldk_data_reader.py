@@ -21,11 +21,13 @@ class LDKdataReader:
 
     def print_stats(self):
         self.get_stats()
-        print('\n=== Stats ===')
+        print('--------------------------------------------------------------------------------')
+        print('  Stats')
+        print('--------------------------------------------------------------------------------')
         print tabulate([['Average', self.stats['average'][0], self.stats['average'][1]],
                        ['Peak-peak', self.stats['peak_peak'][0], self.stats['peak_peak'][1]],
                        ['Average', self.stats['rms'][0], self.stats['rms'][1]]], 
-                       headers=['', 'Chan 1', 'Chan 2'])
+                       headers=['', 'Chan 1', 'Chan 2'], tablefmt="plain")
 
     def get_math(self):
         self.math = {
@@ -48,7 +50,9 @@ class LDKdataReader:
     def print_math(self):
         self.get_math()
 
-        print('\n=== Math widget ===')
+        print('--------------------------------------------------------------------------------')
+        print('  Math')
+        print('--------------------------------------------------------------------------------')
         print('avg_on_button')
         print('  StyleSheet   ' + self.math['AvgOnButton']['StyleSheet'])
         print('  Text         ' + self.math['AvgOnButton']['Text'])
@@ -70,7 +74,9 @@ class LDKdataReader:
     def print_select_channel(self):
         self.get_select_channel()
 
-        print('\n=== Select channel widget ===')
+        print('--------------------------------------------------------------------------------')
+        print('  Select channel')
+        print('--------------------------------------------------------------------------------')
         print('ADC')
         print('  1            ' + unicode(self.select_channel['adc_checkbox'][0]))
         print('  2            ' + unicode(self.select_channel['adc_checkbox'][1]))
@@ -99,7 +105,9 @@ class LDKdataReader:
     def print_monitor(self):
         self.get_monitor()
 
-        print('\n=== Monitor widget ===')
+        print('--------------------------------------------------------------------------------')
+        print('  Monitor')
+        print('--------------------------------------------------------------------------------')
         print('FrameRate      ' + unicode(self.monitor['FrameRate']))
         print('LaserCurrent   ' + unicode(self.monitor['LaserCurrent']))
         print('LaserPower     ' + unicode(self.monitor['LaserPower']))
@@ -112,5 +120,6 @@ if __name__ == "__main__":
     reader.print_stats()
     reader.print_math()
     reader.print_select_channel()
-    reader.plot_data()
     reader.print_monitor()
+
+    reader.plot_data()
