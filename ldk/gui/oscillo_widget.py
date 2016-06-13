@@ -56,7 +56,7 @@ class OscilloWidget(LaseWidget):
         self.math_box.setLayout(self.math_widget.layout)
 
         # Save
-        self.save_widget = SaveWidget(self.stats_widget)
+        self.save_widget = SaveWidget(self.stats_widget, self.math_widget)
         self.save_box = QtGui.QGroupBox("Save")
         self.save_box.setLayout(self.save_widget.layout)
 
