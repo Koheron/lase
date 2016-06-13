@@ -69,7 +69,7 @@ class StatsWidget(QtGui.QWidget):
         self.amplitude_vec = np.roll(self.amplitude_vec, 1, axis=1)
         self.amplitude_rms_vec = np.roll(self.amplitude_rms_vec, 1, axis=1)
 
-        for i in range(self.n_channels):            
+        for i in range(self.n_channels):
             self.average_vec[i,0] = self.get_average(i)
             self.amplitude_vec[i,0] = self.get_amplitude(i)
             self.amplitude_rms_vec[i,0] = self.get_amplitude_rms(i)
