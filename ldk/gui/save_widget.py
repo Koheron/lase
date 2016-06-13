@@ -1,14 +1,17 @@
 from pyqtgraph.Qt import QtGui, QtCore
 
 import h5py
+import numpy as np
 
 class SaveWidget(QtGui.QWidget):
-    def __init__(self, stats_widget, math_widget, select_channel_widget):
+    def __init__(self, oscillo_widget):
         super(SaveWidget, self).__init__()
         self.layout = QtGui.QVBoxLayout()
-        self.stats_widget = stats_widget
-        self.math_widget = math_widget
-        self.select_channel_widget = select_channel_widget
+        self.stats_widget = oscillo_widget.stats_widget
+        self.math_widget = oscillo_widget.math_widget
+        self.select_channel_widget = oscillo_widget.select_channel_widget
+        self.plot_widget = oscillo_widget.plot_widget
+        self.driver = oscillo_widget.driver
 
         self.n_channels = self.stats_widget.n_channels
 
@@ -26,6 +29,7 @@ class SaveWidget(QtGui.QWidget):
                 self._save_stats(f)
                 self._save_math(f)
                 self._save_select_channel(f)
+                self._save_plot(f)
 
     def _save_stats(self, f):
         stats_grp = f.create_group('stats')
@@ -60,3 +64,14 @@ class SaveWidget(QtGui.QWidget):
         for i in range(self.n_channels):
             adc_checkbox_dset[i] = self.select_channel_widget.adc_checkbox[i].isChecked()
             dac_checkbox_dset[i] = self.select_channel_widget.dac_checkbox[i].isChecked()
+
+    def _save_plot(self, f):
+        plot_grp = f.create_group('plot')
+        data_x = np.zeros((2, self.driver.wfm_size))
+        data_y = np.zeros((2, self.driver.wfm_size))
+        data_x[0,:], data_y[0,:] = self.plot_widget.dataItem[0].getData()
+        data_x[1,:], data_y[1,:] = self.plot_widget.dataItem[1].getData()
+        plot_data_x_dset = f.create_dataset('plot/data_x', (self.n_channels, self.driver.wfm_size), dtype='f')
+        plot_data_x_dset[...] = data_x
+        plot_data_y_dset = f.create_dataset('plot/data_y', (self.n_channels, self.driver.wfm_size), dtype='f')
+        plot_data_y_dset[...] = data_y

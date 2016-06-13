@@ -2,6 +2,7 @@ import initExample
 
 import h5py
 import numpy as np
+import matplotlib.pyplot as plt
 
 from tabulate import tabulate
 
@@ -77,6 +78,14 @@ class LDKdataReader:
         print('  1            ' + unicode(self.select_channel['dac_checkbox'][0]))
         print('  2            ' + unicode(self.select_channel['dac_checkbox'][1]))
 
+    def get_plot_data(self):
+        self.data_x = self.file['plot/data_x'][()]
+        self.data_y = self.file['plot/data_y'][()]
+
+    def plot_data(self):
+        self.get_plot_data()
+        plt.plot(np.transpose(self.data_x), np.transpose(self.data_y))
+        plt.show()
 
     def __del__(self):
         self.file.close()
@@ -86,3 +95,4 @@ if __name__ == "__main__":
     reader.print_stats()
     reader.print_math()
     reader.print_select_channel()
+    reader.plot_data()
