@@ -35,10 +35,8 @@ class SaveWidget(QtGui.QWidget):
         stats_grp = f.create_group('stats')
         average_dset = f.create_dataset('stats/average', (self.n_channels,), dtype='f')
         average_dset[...] = self.stats_widget.average
-
         peak_peak_dset = f.create_dataset('stats/peak_peak', (self.n_channels,), dtype='f')
         peak_peak_dset[...] = self.stats_widget.amplitude
-
         amplitude_rms_dset = f.create_dataset('stats/amplitude_rms', (self.n_channels,), dtype='f')
         amplitude_rms_dset[...] = self.stats_widget.amplitude_rms
 
@@ -67,11 +65,18 @@ class SaveWidget(QtGui.QWidget):
 
     def _save_plot(self, f):
         plot_grp = f.create_group('plot')
-        data_x = np.zeros((2, self.driver.wfm_size))
-        data_y = np.zeros((2, self.driver.wfm_size))
+
+        if not self.math_widget.fourier:
+            wfm_size = self.driver.wfm_size
+        else:
+            wfm_size = self.driver.wfm_size/2 - 1
+
+        data_x = np.zeros((2, wfm_size))
+        data_y = np.zeros((2, wfm_size))
+
         data_x[0,:], data_y[0,:] = self.plot_widget.dataItem[0].getData()
         data_x[1,:], data_y[1,:] = self.plot_widget.dataItem[1].getData()
-        plot_data_x_dset = f.create_dataset('plot/data_x', (self.n_channels, self.driver.wfm_size), dtype='f')
+        plot_data_x_dset = f.create_dataset('plot/data_x', (self.n_channels, wfm_size), dtype='f')
         plot_data_x_dset[...] = data_x
-        plot_data_y_dset = f.create_dataset('plot/data_y', (self.n_channels, self.driver.wfm_size), dtype='f')
+        plot_data_y_dset = f.create_dataset('plot/data_y', (self.n_channels, wfm_size), dtype='f')
         plot_data_y_dset[...] = data_y

@@ -107,7 +107,7 @@ class MathWidget(QtGui.QWidget):
             self.plot_widget.enableAutoRange()
             self.avg_widget.setVisible(False)
 
-    def avg_connect(self, val):
+    def avg_connect(self):
         self.n_avg_spectrum = self.avg_spin.value()
 
     def change_n_avg_min(self, value):
