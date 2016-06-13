@@ -21,7 +21,7 @@ class LDKdataReader:
 
     def print_stats(self):
         self.get_stats()
-        print('--------------------------------------------------------------------------------')
+        print('\n--------------------------------------------------------------------------------')
         print('  Stats')
         print('--------------------------------------------------------------------------------')
         print tabulate([['Average', self.stats['average'][0], self.stats['average'][1]],
@@ -50,7 +50,7 @@ class LDKdataReader:
     def print_math(self):
         self.get_math()
 
-        print('--------------------------------------------------------------------------------')
+        print('\n--------------------------------------------------------------------------------')
         print('  Math')
         print('--------------------------------------------------------------------------------')
         print('avg_on_button')
@@ -74,7 +74,7 @@ class LDKdataReader:
     def print_select_channel(self):
         self.get_select_channel()
 
-        print('--------------------------------------------------------------------------------')
+        print('\n--------------------------------------------------------------------------------')
         print('  Select channel')
         print('--------------------------------------------------------------------------------')
         print('ADC')
@@ -105,21 +105,42 @@ class LDKdataReader:
     def print_monitor(self):
         self.get_monitor()
 
-        print('--------------------------------------------------------------------------------')
+        print('\n--------------------------------------------------------------------------------')
         print('  Monitor')
         print('--------------------------------------------------------------------------------')
         print('FrameRate      ' + unicode(self.monitor['FrameRate']))
         print('LaserCurrent   ' + unicode(self.monitor['LaserCurrent']))
         print('LaserPower     ' + unicode(self.monitor['LaserPower']))
 
+    def get_laser(self):
+        self.laser = {
+            'LaserCurrent': self.file['laser/data'].attrs['LaserCurrent'],
+            'LaserON': self.file['laser/data'].attrs['LaserON']
+        }
+
+        return self.laser
+
+    def print_laser(self):
+        self.get_laser()
+
+        print('\n--------------------------------------------------------------------------------')
+        print('  Laser')
+        print('--------------------------------------------------------------------------------')
+        print('LaserCurrent   ' + unicode(self.laser['LaserCurrent']))
+        print('LaserON        ' + unicode(self.laser['LaserON']))
+
+    def print_all(self):
+        self.print_stats()
+        self.print_math()
+        self.print_select_channel()
+        self.print_monitor()
+        self.print_laser()
+        print('\n')
+
     def __del__(self):
         self.file.close()
 
 if __name__ == "__main__":
     reader = LDKdataReader('../test.h5')
-    reader.print_stats()
-    reader.print_math()
-    reader.print_select_channel()
-    reader.print_monitor()
-
+    reader.print_all()
     reader.plot_data()

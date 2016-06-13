@@ -13,6 +13,7 @@ class SaveWidget(QtGui.QWidget):
         self.plot_widget = oscillo_widget.plot_widget
         self.monitor_widget = oscillo_widget.monitor_widget
         self.driver = oscillo_widget.driver
+        self.laser_widget = oscillo_widget.laser_widget
 
         self.n_channels = self.stats_widget.n_channels
 
@@ -27,11 +28,16 @@ class SaveWidget(QtGui.QWidget):
 
         if filename:
             with h5py.File(unicode(filename), 'w') as f:
+                self._save_h5_file_metadata(f)
                 self._save_stats(f)
                 self._save_math(f)
                 self._save_select_channel(f)
                 self._save_plot(f)
                 self._save_monitor(f)
+                self._save_laser(f)
+
+    def _save_h5_file_metadata(self, f):
+        stats_grp = f.create_group('h5_file_metadata')
 
     def _save_stats(self, f):
         stats_grp = f.create_group('stats')
@@ -89,3 +95,10 @@ class SaveWidget(QtGui.QWidget):
         monitor_dset.attrs['FrameRate'] = self.monitor_widget.frame_rate
         monitor_dset.attrs['LaserCurrent'] = self.monitor_widget.laser_current
         monitor_dset.attrs['LaserPower'] = self.monitor_widget.laser_power
+
+    def _save_laser(self, f):
+        laser_grp = f.create_group('laser')
+        laser_dset = f.create_dataset('laser/data', (0,), dtype='f')
+        laser_dset.attrs['LaserCurrent'] = self.laser_widget.laser_current
+        laser_dset.attrs['LaserON'] = self.laser_widget.laser_on
+
