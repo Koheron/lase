@@ -8,13 +8,13 @@ from .dac_widget import DacWidget
 
 import os
 
-class LaseWidget(QtGui.QWidget):
+class BaseWidget(QtGui.QWidget):
     """ This widget serves as the base widget for `OscilloWidget` and
         `SpectrumWidget`.
     """
 
     def __init__(self, driver, parent):
-        super(LaseWidget, self).__init__()
+        super(BaseWidget, self).__init__()
     
         self.data_path = parent.data_path
         self.img_path = parent.img_path

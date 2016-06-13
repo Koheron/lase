@@ -5,7 +5,7 @@ import numpy as np
 from pyqtgraph.Qt import QtGui, QtCore
 import pyqtgraph as pg
 
-from .lase_widget import LaseWidget
+from .base_widget import BaseWidget
 from .cursor_widget import CursorWidget
 from .stats_widget import StatsWidget
 from .select_channel_widget import SelectChannelWidget
@@ -14,7 +14,7 @@ from .calibration_widget import CalibrationWidget
 from .save_widget import SaveWidget
 
 
-class OscilloWidget(LaseWidget):
+class OscilloWidget(BaseWidget):
     def __init__(self, oscillo, parent):
         super(OscilloWidget, self).__init__(oscillo, parent)
 
@@ -72,6 +72,31 @@ class OscilloWidget(LaseWidget):
         self.right_panel.addWidget(self.tabs)
         self.right_panel_widget.setLayout(self.right_panel)
 
+    def init_plot_widget(self):
+        # Right part
+        self.plot_widget.show_adc = [True, True]
+        self.plot_widget.show_dac = [False, False]
+
+        # Plot Widget
+        self.plot_widget.dataItem = []
+        for i in range(2):
+            self.plot_widget.dataItem.append(pg.PlotDataItem(1e6*self.driver.sampling.t,
+                                             self.driver.adc[i, :], pen=(i, 4)))
+        for i in range(2):
+            self.plot_widget.dataItem.append(pg.PlotDataItem(1e6*self.driver.sampling.t,
+                                             self.driver.dac[i, :], pen=(i, 4)))
+
+        for item in self.plot_widget.dataItem:
+            self.plot_widget.addItem(item)
+        
+        for i in range(2):
+            self.plot_widget.dataItem[i].setVisible(self.plot_widget.show_adc[i])
+            self.plot_widget.dataItem[i+2].setVisible(self.plot_widget.show_dac[i])
+
+        self.plot_widget.plotItem.setMouseEnabled(x=False, y=True)
+
+        self.plot_widget.plotItem = self.plot_widget.getPlotItem()
+
 
     def update(self):
         super(OscilloWidget, self).update()
@@ -127,29 +152,3 @@ class OscilloWidget(LaseWidget):
         self.plot_widget.getPlotItem().getAxis('bottom').setLabel('Time (us)')
         self.plot_widget.getPlotItem().getAxis('left').setLabel('Optical power (arb. units)')
         self.plot_widget.getViewBox().setMouseMode(self.plot_widget.getViewBox().PanMode)
-
-    def init_plot_widget(self):
-
-        # Right part
-        self.plot_widget.show_adc = [True, True]
-        self.plot_widget.show_dac = [False, False]
-
-        # Plot Widget
-        self.plot_widget.dataItem = []
-        for i in range(2):
-            self.plot_widget.dataItem.append(pg.PlotDataItem(1e6*self.driver.sampling.t,
-                                             self.driver.adc[i, :], pen=(i, 4)))
-        for i in range(2):
-            self.plot_widget.dataItem.append(pg.PlotDataItem(1e6*self.driver.sampling.t,
-                                             self.driver.dac[i, :], pen=(i, 4)))
-
-        for item in self.plot_widget.dataItem:
-            self.plot_widget.addItem(item)
-        
-        for i in range(2):
-            self.plot_widget.dataItem[i].setVisible(self.plot_widget.show_adc[i])
-            self.plot_widget.dataItem[i+2].setVisible(self.plot_widget.show_dac[i])
-
-        self.plot_widget.plotItem.setMouseEnabled(x=False, y=True)
-
-        self.plot_widget.plotItem = self.plot_widget.getPlotItem()

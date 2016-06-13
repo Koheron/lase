@@ -43,7 +43,7 @@ class MathWidget(QtGui.QWidget):
 
         # Select avg
         self.n_avg_label = QtGui.QLabel()
-        self.n_avg_label.setText('N avg')
+        self.n_avg_label.setText('FFT averages')
         self.avg_spin = QtGui.QSpinBox()
         self.avg_spin.setMaximum(1000)
         self.avg_spin.setMinimum(1)
