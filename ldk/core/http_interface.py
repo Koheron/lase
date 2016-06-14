@@ -18,16 +18,6 @@ class HTTPInterface:
     def ping(self):
         r = requests.get(self.url + '/api/board/ping')
         
-    def deploy_remote_instrument(self, name, version):
-        """ Deploy a remotely available instrument
-            
-            Args:
-                - name: Instrument name
-                - version: Instrument version
-        """
-        zip_filename = name + '-' + version + '.zip'
-        r = requests.get(self.url + '/api/deploy/remote/' + zip_filename)
-
     def deploy_local_instrument(self, name, version):
         """ Deploy a locally available instrument
             Return 0 on success, -1 else
