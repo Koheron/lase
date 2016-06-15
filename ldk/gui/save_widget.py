@@ -37,7 +37,7 @@ class SaveWidget(QtGui.QWidget):
 
         if (extension == '.h5' or extension == '.hdf5') and HAS_HDF5:
             self.dump_to_h5(filename)
-        elif extension == '.zip' and HAS_HDF5:
+        elif extension == '.zip':
             self.dump_to_zip(filename)
         else:
             raise TypeError('Unknown file extension')
