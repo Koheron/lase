@@ -1,8 +1,6 @@
 """
-Program for making the RedPitaya / Koheron laser development
-work as a morsecode emitter. Code is scanned from the command
-line by the program, and transmitted as short and long laser-
-pulses. Syntax for operating the laser is taken from the modulaton.py file, found in https://github.com/Koheron/laser-development-kit/tree/master/examples
+Program for making the RedPitaya / Koheron laser development work as a morsecode emitter. 
+Code is scanned from the command line by the program, and transmitted as short and long laser-pulses.
 """
 import initExample # Necessary module, must be in the same
 # program as the main file.
@@ -14,10 +12,8 @@ import matplotlib.pyplot as plt
 from utilities import load_instrument
 from ldk.drivers import Oscillo
 
-# Enter card IP
+# Enter board IP
 host = os.getenv('HOST','10.42.0.53')
-
-
 client = load_instrument(host, instrument='oscillo')
 driver = Oscillo(client)
 
@@ -141,8 +137,7 @@ driver.close()
 
 """
 Written by Einar KNUDSEN. einarknudsen@yahoo.com
-The code has been ported from a Raspberry PI project to work with the Koheron laser developement board. Please visit www.koheron.com for further information about the Koheron Laser Developement Kit.
-
+The code has been ported from a Raspberry PI project to work with the Koheron laser developement board. 
 Awesome laser board, guys!
 """
 
