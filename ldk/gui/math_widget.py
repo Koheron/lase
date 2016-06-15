@@ -112,3 +112,17 @@ class MathWidget(QtGui.QWidget):
 
     def change_n_avg_min(self, value):
         self.driver.set_n_avg_min(int(value))
+
+    def save_as_h5(self, f):
+        math_grp = f.create_group('math')
+        avg_on_button_dset = f.create_dataset('math/avg_on_button', (0,), dtype='f')
+        avg_on_button_dset.attrs['StyleSheet'] = unicode(self.avg_on_button.styleSheet())
+        avg_on_button_dset.attrs['Text'] = unicode(self.avg_on_button.text())
+
+        avg_spin_dset = f.create_dataset('math/avg_spin', (0,), dtype='f')
+        avg_spin_dset.attrs['Minimum'] = self.avg_spin.minimum()
+        avg_spin_dset.attrs['Maximum'] = self.avg_spin.maximum()
+        avg_spin_dset.attrs['Value'] = self.avg_spin.value()
+
+        fourier_dset = f.create_dataset('math/fourier', (0,), dtype='f')
+        fourier_dset.attrs['Status'] = self.fourier

@@ -41,4 +41,12 @@ class SelectChannelWidget(QtGui.QWidget):
         for i in range(2):
             self.adc_checkbox[i].setCheckState(QtCore.Qt.Unchecked)
             self.dac_checkbox[i].setCheckState(QtCore.Qt.Unchecked)
-    
+
+    def save_as_h5(self, f):
+        select_channel_grp = f.create_group('select_channel')
+        adc_checkbox_dset = f.create_dataset('select_channel/adc_checkbox', (2,), dtype=bool)
+        dac_checkbox_dset = f.create_dataset('select_channel/dac_checkbox', (2,), dtype=bool)
+
+        for i in range(2):
+            adc_checkbox_dset[i] = self.adc_checkbox[i].isChecked()
+            dac_checkbox_dset[i] = self.dac_checkbox[i].isChecked()

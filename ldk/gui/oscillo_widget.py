@@ -152,3 +152,21 @@ class OscilloWidget(BaseWidget):
         self.plot_widget.getPlotItem().getAxis('bottom').setLabel('Time (us)')
         self.plot_widget.getPlotItem().getAxis('left').setLabel('Optical power (arb. units)')
         self.plot_widget.getViewBox().setMouseMode(self.plot_widget.getViewBox().PanMode)
+
+    def save_as_h5(self, f):
+        plot_grp = f.create_group('plot')
+
+        if not self.math_widget.fourier:
+            wfm_size = self.driver.wfm_size
+        else:
+            wfm_size = self.driver.wfm_size/2 - 1
+
+        data_x = np.zeros((2, wfm_size))
+        data_y = np.zeros((2, wfm_size))
+
+        data_x[0,:], data_y[0,:] = self.plot_widget.dataItem[0].getData()
+        data_x[1,:], data_y[1,:] = self.plot_widget.dataItem[1].getData()
+        plot_data_x_dset = f.create_dataset('plot/data_x', (2, wfm_size), dtype='f')
+        plot_data_x_dset[...] = data_x
+        plot_data_y_dset = f.create_dataset('plot/data_y', (2, wfm_size), dtype='f')
+        plot_data_y_dset[...] = data_y

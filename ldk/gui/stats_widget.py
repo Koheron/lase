@@ -86,3 +86,11 @@ class StatsWidget(QtGui.QWidget):
             ampl_rms_text = self.format_value(self.amplitude_rms[i])
             self.ampl_rms_labels[i+1].setText(ampl_rms_text)
 
+    def save_as_h5(self, f):
+        stats_grp = f.create_group('stats')
+        average_dset = f.create_dataset('stats/average', (self.n_channels,), dtype='f')
+        average_dset[...] = self.average
+        peak_peak_dset = f.create_dataset('stats/peak_peak', (self.n_channels,), dtype='f')
+        peak_peak_dset[...] = self.amplitude
+        amplitude_rms_dset = f.create_dataset('stats/amplitude_rms', (self.n_channels,), dtype='f')
+        amplitude_rms_dset[...] = self.amplitude_rms

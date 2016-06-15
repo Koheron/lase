@@ -10,6 +10,21 @@ class LDKdataReader:
     def __init__(self, h5_filename):
         self.file = h5py.File(h5_filename)
 
+    def get_metadata(self):
+        self.metadata = {
+            'Date': self.file['h5_file_metadata/data'].attrs['Date'],
+            'Time': self.file['h5_file_metadata/data'].attrs['Time']
+        }
+
+    def print_metadata(self):
+        self.get_metadata()
+
+        print('\n--------------------------------------------------------------------------------')
+        print('  Metadata')
+        print('--------------------------------------------------------------------------------')
+        print('Date       ' + self.metadata['Date'])
+        print('Time       ' + self.metadata['Time'])
+
     def get_stats(self):
         self.stats = {
           'average': self.file['stats/average'][()],
@@ -130,6 +145,7 @@ class LDKdataReader:
         print('LaserON        ' + unicode(self.laser['LaserON']))
 
     def print_all(self):
+        self.print_metadata()
         self.print_stats()
         self.print_math()
         self.print_select_channel()

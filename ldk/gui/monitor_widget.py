@@ -61,3 +61,10 @@ class MonitorWidget(QtGui.QWidget):
             self.driver.opened = False
         except:
             self.driver.opened = False
+
+    def save_as_h5(self, f):
+        monitor_grp = f.create_group('monitor')
+        monitor_dset = f.create_dataset('monitor/data', (0,), dtype='f')
+        monitor_dset.attrs['FrameRate'] = self.frame_rate
+        monitor_dset.attrs['LaserCurrent'] = self.laser_current
+        monitor_dset.attrs['LaserPower'] = self.laser_power
