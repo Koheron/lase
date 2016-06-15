@@ -38,6 +38,7 @@ class SaveWidget(QtGui.QWidget):
 
     def _save_h5_file_metadata(self, f):
         stats_grp = f.create_group('h5_file_metadata')
+        # TODO save date, time, bitstream_id, server commit
 
     def _save_stats(self, f):
         stats_grp = f.create_group('stats')
