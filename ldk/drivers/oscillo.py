@@ -121,23 +121,6 @@ class Oscillo(Base):
         white_noise /= 1.7 * np.max(np.abs(white_noise))
         return white_noise
 
-    def get_amplitude_transfer_function(self, channel_dac=0,
-                                        channel_adc=0, transfer_avg=100):
-        n_freqs = self.wfm_size / 2 + 1
-        self.amplitude_transfer_function *= 0
-
-        for i in range(transfer_avg):
-            white_noise = self._white_noise(n_freqs)
-            self.dac[channel_dac, :] = white_noise
-            self.set_dac()
-            time.sleep(0.01)
-            self.get_adc()
-            self.amplitude_transfer_function += np.fft.fft(self.adc[channel_adc, :]) / np.fft.fft(white_noise)
-        self.amplitude_transfer_function = self.amplitude_transfer_function / transfer_avg
-        self.amplitude_transfer_function[0] = 1
-        self.dac[channel_dac, :] = np.zeros(self.wfm_size)
-        self.set_dac()
-
     def get_correction(self):
         tmp = np.fft.fft(self.amplitude_error) / self.amplitude_transfer_function
         tmp[0] = 0
@@ -160,6 +143,3 @@ class Oscillo(Base):
             self.avg_spectrum += fft_adc[:, 0:self.wfm_size / 2]
 
         self.avg_spectrum = self.avg_spectrum / n_avg
-
-    def set_amplitude_transfer_function(self, amplitude_transfer_function):
-        self.amplitude_transfer_function = amplitude_transfer_function
