@@ -69,7 +69,7 @@ class StatsWidget(QtGui.QWidget):
         self.amplitude_vec = np.roll(self.amplitude_vec, 1, axis=1)
         self.amplitude_rms_vec = np.roll(self.amplitude_rms_vec, 1, axis=1)
 
-        for i in range(self.n_channels):            
+        for i in range(self.n_channels):
             self.average_vec[i,0] = self.get_average(i)
             self.amplitude_vec[i,0] = self.get_amplitude(i)
             self.amplitude_rms_vec[i,0] = self.get_amplitude_rms(i)
@@ -86,3 +86,18 @@ class StatsWidget(QtGui.QWidget):
             ampl_rms_text = self.format_value(self.amplitude_rms[i])
             self.ampl_rms_labels[i+1].setText(ampl_rms_text)
 
+    def save_as_h5(self, f):
+        stats_grp = f.create_group('stats')
+        average_dset = f.create_dataset('stats/average', (self.n_channels,), dtype='f')
+        average_dset[...] = self.average
+        peak_peak_dset = f.create_dataset('stats/peak_peak', (self.n_channels,), dtype='f')
+        peak_peak_dset[...] = self.amplitude
+        amplitude_rms_dset = f.create_dataset('stats/amplitude_rms', (self.n_channels,), dtype='f')
+        amplitude_rms_dset[...] = self.amplitude_rms
+
+    def save_as_zip(self, _dict, dest=''):
+        _dict['stats'] = {
+          'average': [self.average[0], self.average[1]],
+          'peak_peak': [self.amplitude[0], self.amplitude[1]],
+          'rms': [self.amplitude_rms[0], self.amplitude_rms[1]]
+        }

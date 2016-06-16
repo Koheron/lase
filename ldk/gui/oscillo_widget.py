@@ -4,16 +4,18 @@
 import numpy as np
 from pyqtgraph.Qt import QtGui, QtCore
 import pyqtgraph as pg
+import os
 
-from .lase_widget import LaseWidget
+from .base_widget import BaseWidget
 from .cursor_widget import CursorWidget
 from .stats_widget import StatsWidget
 from .select_channel_widget import SelectChannelWidget
 from .math_widget import MathWidget
 from .calibration_widget import CalibrationWidget
+from .save_widget import SaveWidget
 
 
-class OscilloWidget(LaseWidget):
+class OscilloWidget(BaseWidget):
     def __init__(self, oscillo, parent):
         super(OscilloWidget, self).__init__(oscillo, parent)
 
@@ -54,16 +56,47 @@ class OscilloWidget(LaseWidget):
         self.math_box = QtGui.QGroupBox("Math")
         self.math_box.setLayout(self.math_widget.layout)
 
+        # Save
+        self.save_widget = SaveWidget(self)
+        self.save_box = QtGui.QGroupBox("Save")
+        self.save_box.setLayout(self.save_widget.layout)
+
         # Add widgets to control layout
         self.control_layout.addWidget(self.display_box)
         self.control_layout.addLayout(self.stats_widget.layout)
         self.control_layout.addWidget(self.cursors_box)
         self.control_layout.addWidget(self.math_box)
+        self.control_layout.addWidget(self.save_box)
         self.control_layout.addStretch(1)
         self.control.setLayout(self.control_layout)
 
         self.right_panel.addWidget(self.tabs)
         self.right_panel_widget.setLayout(self.right_panel)
+
+    def init_plot_widget(self):
+        # Right part
+        self.plot_widget.show_adc = [True, True]
+        self.plot_widget.show_dac = [False, False]
+
+        # Plot Widget
+        self.plot_widget.dataItem = []
+        for i in range(2):
+            self.plot_widget.dataItem.append(pg.PlotDataItem(1e6*self.driver.sampling.t,
+                                             self.driver.adc[i, :], pen=(i, 4)))
+        for i in range(2):
+            self.plot_widget.dataItem.append(pg.PlotDataItem(1e6*self.driver.sampling.t,
+                                             self.driver.dac[i, :], pen=(i, 4)))
+
+        for item in self.plot_widget.dataItem:
+            self.plot_widget.addItem(item)
+        
+        for i in range(2):
+            self.plot_widget.dataItem[i].setVisible(self.plot_widget.show_adc[i])
+            self.plot_widget.dataItem[i+2].setVisible(self.plot_widget.show_dac[i])
+
+        self.plot_widget.plotItem.setMouseEnabled(x=False, y=True)
+
+        self.plot_widget.plotItem = self.plot_widget.getPlotItem()
 
 
     def update(self):
@@ -122,28 +155,31 @@ class OscilloWidget(LaseWidget):
         self.plot_widget.getPlotItem().getAxis('left').setLabel('Optical power (arb. units)')
         self.plot_widget.getViewBox().setMouseMode(self.plot_widget.getViewBox().PanMode)
 
-    def init_plot_widget(self):
+    def get_data_to_save(self):
+        if not self.math_widget.fourier:
+            wfm_size = self.driver.wfm_size
+        else:
+            wfm_size = self.driver.wfm_size/2 - 1
 
-        # Right part
-        self.plot_widget.show_adc = [True, True]
-        self.plot_widget.show_dac = [False, False]
+        data_x = np.zeros((2, wfm_size))
+        data_y = np.zeros((2, wfm_size))
+        data_x[0,:], data_y[0,:] = self.plot_widget.dataItem[0].getData()
+        data_x[1,:], data_y[1,:] = self.plot_widget.dataItem[1].getData()
+        return data_x, data_y, wfm_size
 
-        # Plot Widget
-        self.plot_widget.dataItem = []
-        for i in range(2):
-            self.plot_widget.dataItem.append(pg.PlotDataItem(1e6*self.driver.sampling.t,
-                                             self.driver.adc[i, :], pen=(i, 4)))
-        for i in range(2):
-            self.plot_widget.dataItem.append(pg.PlotDataItem(1e6*self.driver.sampling.t,
-                                             self.driver.dac[i, :], pen=(i, 4)))
+    def save_as_h5(self, f):
+        data_x, data_y, wfm_size = self.get_data_to_save()
+        plot_grp = f.create_group('plot')
+        plot_data_x_dset = f.create_dataset('plot/data_x', (2, wfm_size), dtype='f')
+        plot_data_x_dset[...] = data_x
+        plot_data_y_dset = f.create_dataset('plot/data_y', (2, wfm_size), dtype='f')
+        plot_data_y_dset[...] = data_y
 
-        for item in self.plot_widget.dataItem:
-            self.plot_widget.addItem(item)
-        
-        for i in range(2):
-            self.plot_widget.dataItem[i].setVisible(self.plot_widget.show_adc[i])
-            self.plot_widget.dataItem[i+2].setVisible(self.plot_widget.show_dac[i])
-
-        self.plot_widget.plotItem.setMouseEnabled(x=False, y=True)
-
-        self.plot_widget.plotItem = self.plot_widget.getPlotItem()
+    def save_as_zip(self, _dict, dest=''):
+        data_x, data_y, wfm_size = self.get_data_to_save()
+        data = np.zeros((4, wfm_size))
+        data[0,:] = data_x[0,:]
+        data[1,:] = data_x[1,:]
+        data[2,:] = data_y[0,:]
+        data[3,:] = data_y[1,:]
+        np.save(os.path.join(dest, 'plot_data.npy'), data)

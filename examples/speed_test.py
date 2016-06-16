@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from utilities import load_instrument
 from ldk.drivers import Oscillo
 
+host = os.getenv('HOST','192.168.1.100')
 cmd = os.getenv('CMD','get_adc')
 
 def speed_test(host, n_pts=1000):
@@ -36,10 +37,7 @@ def speed_test(host, n_pts=1000):
     plt.plot(time_array)
     driver.close()
 
-hosts = ['192.168.1.{0}'.format(i) for i in [12]]
-
-for host in hosts:
-    speed_test(host,n_pts=10000)
+speed_test(host,n_pts=10000)
 
 plt.ylabel('Time (s)')
 plt.show()

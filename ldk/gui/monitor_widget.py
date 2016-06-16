@@ -44,15 +44,16 @@ class MonitorWidget(QtGui.QWidget):
         self.close_button.clicked.connect(self.close_session)
 
     def update(self, frame_rate = 0):
+        self.frame_rate = frame_rate
         self.laser_current = 0.95 * self.laser_current + 0.05 * self.driver.get_laser_current()
         self.laser_power = 0.95 * self.laser_power + 0.05 * self.driver.get_laser_power()
 
-        self.laser_current_label.setText('Measured current (mA) : '+
+        self.laser_current_label.setText('Measured current (mA): '+
                                          "{:.2f}".format(1000 * self.laser_current))
-        self.laser_power_label.setText('Laser power (u.a.) : '+
+        self.laser_power_label.setText('Laser power (a. u.): '+
                                        "{:.2f}".format(self.laser_power))
-        self.frame_rate_label.setText('Frame rate (Hz) : '+
-                                      "{:.2f}".format(frame_rate))
+        self.frame_rate_label.setText('Frame rate (Hz): '+
+                                      "{:.2f}".format(self.frame_rate))
 
     def close_session(self):
         try:
@@ -60,3 +61,17 @@ class MonitorWidget(QtGui.QWidget):
             self.driver.opened = False
         except:
             self.driver.opened = False
+
+    def save_as_h5(self, f):
+        monitor_grp = f.create_group('monitor')
+        monitor_dset = f.create_dataset('monitor/data', (0,), dtype='f')
+        monitor_dset.attrs['FrameRate'] = self.frame_rate
+        monitor_dset.attrs['LaserCurrent'] = self.laser_current
+        monitor_dset.attrs['LaserPower'] = self.laser_power
+
+    def save_as_zip(self, _dict, dest=''):
+        _dict['monitor'] = {
+          'FrameRate': self.frame_rate,
+          'LaserCurrent': self.laser_current,
+          'LaserPower': self.laser_power
+        }

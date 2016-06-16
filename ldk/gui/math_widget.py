@@ -43,7 +43,7 @@ class MathWidget(QtGui.QWidget):
 
         # Select avg
         self.n_avg_label = QtGui.QLabel()
-        self.n_avg_label.setText('N avg')
+        self.n_avg_label.setText('FFT averages')
         self.avg_spin = QtGui.QSpinBox()
         self.avg_spin.setMaximum(1000)
         self.avg_spin.setMinimum(1)
@@ -107,8 +107,38 @@ class MathWidget(QtGui.QWidget):
             self.plot_widget.enableAutoRange()
             self.avg_widget.setVisible(False)
 
-    def avg_connect(self, val):
+    def avg_connect(self):
         self.n_avg_spectrum = self.avg_spin.value()
 
     def change_n_avg_min(self, value):
         self.driver.set_n_avg_min(int(value))
+
+    def save_as_h5(self, f):
+        math_grp = f.create_group('math')
+        avg_on_button_dset = f.create_dataset('math/avg_on_button', (0,), dtype='f')
+        avg_on_button_dset.attrs['StyleSheet'] = unicode(self.avg_on_button.styleSheet())
+        avg_on_button_dset.attrs['Text'] = unicode(self.avg_on_button.text())
+
+        avg_spin_dset = f.create_dataset('math/avg_spin', (0,), dtype='f')
+        avg_spin_dset.attrs['Minimum'] = self.avg_spin.minimum()
+        avg_spin_dset.attrs['Maximum'] = self.avg_spin.maximum()
+        avg_spin_dset.attrs['Value'] = self.avg_spin.value()
+
+        fourier_dset = f.create_dataset('math/fourier', (0,), dtype='f')
+        fourier_dset.attrs['Status'] = self.fourier
+
+    def save_as_zip(self, _dict, dest=''):
+        _dict['math'] = {
+          'AvgOnButton': {
+            'StyleSheet': unicode(self.avg_on_button.styleSheet()),
+            'Text': unicode(self.avg_on_button.text())
+          },
+          'AvgSpin': {
+            'Minimum': self.avg_spin.minimum(),
+            'Maximum': self.avg_spin.maximum(),
+            'Value': self.avg_spin.value()
+          },
+          'Fourier': {
+            'Status': self.fourier
+          }
+        }
