@@ -24,15 +24,7 @@ class Oscillo(Base):
         self.adc = np.zeros((2, self.wfm_size))
         self.spectrum = np.zeros((2, self.wfm_size / 2))
         self.avg_spectrum = np.zeros((2, self.wfm_size / 2))
-        self.ideal_amplitude_waveform = np.zeros(self.wfm_size)
-        self.amplitude_transfer_function = np.ones(self.wfm_size,
-                                                   dtype=np.dtype('complex64'))
-        # Correction
-        sigma_freq = 5e6  # Hz
-        self.gaussian_filter = np.exp(-self.sampling.f_fft ** 2 / (2 * sigma_freq ** 2))
-
         self.set_n_avg_min(0)
-
         self.reset()
 
     def open_oscillo(self):
@@ -104,5 +96,4 @@ class Oscillo(Base):
             self.get_adc()
             fft_adc = np.abs(np.fft.fft(self.adc, axis=1))
             self.avg_spectrum += fft_adc[:, 0:self.wfm_size / 2]
-
-        self.avg_spectrum = self.avg_spectrum / n_avg
+        self.avg_spectrum /= n_avg
