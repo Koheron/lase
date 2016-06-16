@@ -98,38 +98,7 @@ class Oscillo(Base):
 
     def get_adc(self):
         data = self.read_all_channels()
-
-        self.adc[0, :] = data[0:self.wfm_size]
-        self.adc[1, :] = data[self.wfm_size:]
-
-        self.adc[0, :] -= self.adc_offset[0]
-        self.adc[1, :] -= self.adc_offset[1]
-        self.adc[0, :] *= self.optical_power[0] / self.power[0]
-        self.adc[1, :] *= self.optical_power[1] / self.power[1]
-
-    def _white_noise(self, n_freqs, n_stop=None):
-        if n_stop is None:
-            n_stop = n_freqs
-        amplitudes = np.zeros(n_freqs)
-        amplitudes[0:n_stop] = 1
-        random_phases = 2 * np.pi * np.random.rand(n_freqs)
-        white_noise = np.fft.irfft(amplitudes * np.exp(1j * random_phases))
-        white_noise = np.fft.fft(white_noise)
-        white_noise[0] = 0.01
-        white_noise[self.wfm_size / 2] = 1
-        white_noise = np.real(np.fft.ifft(white_noise))
-        white_noise /= 1.7 * np.max(np.abs(white_noise))
-        return white_noise
-
-    def get_correction(self):
-        tmp = np.fft.fft(self.amplitude_error) / self.amplitude_transfer_function
-        tmp[0] = 0
-        tmp = self.gaussian_filter * tmp
-        return np.real(np.fft.ifft(tmp))
-
-    def optimize_amplitude(self, alpha=1, channel=0):
-        self.amplitude_error = (self.adc[0, :] - np.mean(self.adc[0, :])) - self.ideal_amplitude_waveform
-        self.dac[channel, :] -= alpha * self.get_correction()
+        self.adc = np.reshape(data, (2, self.wfm_size))
 
     def get_spectrum(self):
         fft_adc = np.fft.fft(self.adc, axis=1)
