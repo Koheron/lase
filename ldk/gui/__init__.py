@@ -2,7 +2,7 @@
 
 from .cursor_widget import CursorWidget
 from .dac_widget import DacWidget
-from .lase_widget import LaseWidget
+from .base_widget import BaseWidget
 from .slider_widget import SliderWidget
 from .oscillo_widget import OscilloWidget
 from .laser_widget import LaserWidget
@@ -12,10 +12,11 @@ from .select_channel_widget import SelectChannelWidget
 from .welcome_widget import WelcomeWidget
 from .spectrum_widget import SpectrumWidget
 from .stats_widget import StatsWidget
+from .save_widget import SaveWidget
 
 __all__ = ['CursorWidget',
            'DacWidget',
-           'LaseWidget',
+           'BaseWidget',
            'SliderWidget',
            'OscilloWidget',
            'LaserWidget',
@@ -24,5 +25,6 @@ __all__ = ['CursorWidget',
            'SelectChannelWidget',
            'WelcomeWidget',
            'SpectrumWidget',
-           'StatsWidget'
+           'StatsWidget',
+           'SaveWidget'
           ]

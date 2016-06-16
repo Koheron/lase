@@ -4,8 +4,8 @@ import numpy as np
 from pyqtgraph.Qt import QtGui
 from PyQt4.QtCore import SIGNAL, pyqtSignal
 
+from .base_widget import BaseWidget
 from .plot_widget import PlotWidget
-from .lase_widget import LaseWidget
 from .cursor_widget import CursorWidget
 from .noise_floor_widget import NoiseFloorWidget
 from .lidar_widget import LidarWidget
@@ -13,7 +13,7 @@ from .slider_widget import SliderWidget
 
 from PyQt4.QtCore import pyqtSignal
 
-class SpectrumWidget(LaseWidget):
+class SpectrumWidget(BaseWidget):
 
     #offset_updated_signal = pyqtSignal(int)
 
