@@ -52,13 +52,7 @@ class SpeedTest(Oscillo):
         else:
             print 'unknown method'        
 
-        self.adc[0, :] = data[0:self.wfm_size]
-        self.adc[1, :] = data[self.wfm_size:]
-
-        self.adc[0, :] -= self.adc_offset[0]
-        self.adc[1, :] -= self.adc_offset[1]
-        self.adc[0, :] *= self.optical_power[0] / self.power[0]
-        self.adc[1, :] *= self.optical_power[1] / self.power[1]
+        self.adc = np.reshape(data, (2, self.wfm_size))
 
     @command('SPEED_TEST')
     def read_raw_all(self):
