@@ -28,7 +28,7 @@ class SaveWidget(QtGui.QWidget):
 
     def save_data(self):
         if HAS_HDF5:
-            file_filter = 'hdf5 (*.h5 *.hdf5 *.);; zip (*.zip *.)'
+            file_filter = 'zip (*.zip *.);; hdf5 (*.h5 *.hdf5 *.)'
         else:
             file_filter = 'zip (*.zip *.)'
 
@@ -53,11 +53,18 @@ class SaveWidget(QtGui.QWidget):
             self.oscillo_widget.laser_widget.save_as_h5(f)
 
     def dump_to_zip(self, filename):
+        tmp_dir = os.path.join(os.path.dirname(filename), unicode(uuid.uuid4()))
+        os.makedirs(tmp_dir)
+
         _dict = {} # Contains elements to be dumped in json
         _dict['metadata'] = self.metadata()
 
-        tmp_dir = os.path.join(os.path.dirname(filename), unicode(uuid.uuid4()))
-        os.makedirs(tmp_dir)
+        self.oscillo_widget.stats_widget.save_as_zip(_dict, tmp_dir)
+        self.oscillo_widget.math_widget.save_as_zip(_dict, tmp_dir)
+        self.oscillo_widget.select_channel_widget.save_as_zip(_dict, tmp_dir)
+        self.oscillo_widget.save_as_zip(_dict, tmp_dir)
+        self.oscillo_widget.monitor_widget.save_as_zip(_dict, tmp_dir)
+        self.oscillo_widget.laser_widget.save_as_zip(_dict, tmp_dir)
 
         with open(os.path.join(tmp_dir, 'data.json'), 'w') as f:
             json.dump(_dict, f)

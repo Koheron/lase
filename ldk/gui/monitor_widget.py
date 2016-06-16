@@ -68,3 +68,10 @@ class MonitorWidget(QtGui.QWidget):
         monitor_dset.attrs['FrameRate'] = self.frame_rate
         monitor_dset.attrs['LaserCurrent'] = self.laser_current
         monitor_dset.attrs['LaserPower'] = self.laser_power
+
+    def save_as_zip(self, _dict, dest=''):
+        _dict['monitor'] = {
+          'FrameRate': self.frame_rate,
+          'LaserCurrent': self.laser_current,
+          'LaserPower': self.laser_power
+        }

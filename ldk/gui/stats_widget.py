@@ -94,3 +94,10 @@ class StatsWidget(QtGui.QWidget):
         peak_peak_dset[...] = self.amplitude
         amplitude_rms_dset = f.create_dataset('stats/amplitude_rms', (self.n_channels,), dtype='f')
         amplitude_rms_dset[...] = self.amplitude_rms
+
+    def save_as_zip(self, _dict, dest=''):
+        _dict['stats'] = {
+          'average': [self.average[0], self.average[1]],
+          'peak_peak': [self.amplitude[0], self.amplitude[1]],
+          'rms': [self.amplitude_rms[0], self.amplitude_rms[1]]
+        }

@@ -50,3 +50,9 @@ class SelectChannelWidget(QtGui.QWidget):
         for i in range(2):
             adc_checkbox_dset[i] = self.adc_checkbox[i].isChecked()
             dac_checkbox_dset[i] = self.dac_checkbox[i].isChecked()
+
+    def save_as_zip(self, _dict, dest=''):
+        _dict['select_channel'] = {
+          'adc_checkbox': [self.adc_checkbox[0].isChecked(), self.adc_checkbox[1].isChecked()],
+          'dac_checkbox': [self.dac_checkbox[0].isChecked(), self.dac_checkbox[1].isChecked()]
+        }

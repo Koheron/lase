@@ -56,3 +56,9 @@ class LaserWidget(QtGui.QWidget):
         laser_dset = f.create_dataset('laser/data', (0,), dtype='f')
         laser_dset.attrs['LaserCurrent'] = self.laser_current
         laser_dset.attrs['LaserON'] = self.laser_on
+
+    def save_as_zip(self, _dict, dest=''):
+        _dict['laser'] = {
+          'LaserCurrent': self.laser_current,
+          'LaserON': self.laser_on
+        }

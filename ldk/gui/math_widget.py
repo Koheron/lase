@@ -126,3 +126,19 @@ class MathWidget(QtGui.QWidget):
 
         fourier_dset = f.create_dataset('math/fourier', (0,), dtype='f')
         fourier_dset.attrs['Status'] = self.fourier
+
+    def save_as_zip(self, _dict, dest=''):
+        _dict['math'] = {
+          'AvgOnButton': {
+            'StyleSheet': unicode(self.avg_on_button.styleSheet()),
+            'Text': unicode(self.avg_on_button.text())
+          },
+          'AvgSpin': {
+            'Minimum': self.avg_spin.minimum(),
+            'Maximum': self.avg_spin.maximum(),
+            'Value': self.avg_spin.value()
+          },
+          'Fourier': {
+            'Status': self.fourier
+          }
+        }
