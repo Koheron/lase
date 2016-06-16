@@ -27,15 +27,9 @@ class Oscillo(Base):
         self.ideal_amplitude_waveform = np.zeros(self.wfm_size)
         self.amplitude_transfer_function = np.ones(self.wfm_size,
                                                    dtype=np.dtype('complex64'))
-
         # Correction
         sigma_freq = 5e6  # Hz
         self.gaussian_filter = np.exp(-self.sampling.f_fft ** 2 / (2 * sigma_freq ** 2))
-
-        # Calibration
-        self.adc_offset = np.zeros(2)
-        self.optical_power = np.ones(2)
-        self.power = np.ones(2)
 
         self.set_n_avg_min(0)
 
