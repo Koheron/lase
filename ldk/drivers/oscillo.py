@@ -43,9 +43,6 @@ class Oscillo(Base):
     @command('OSCILLO','I')
     def set_period(self, period): pass
 
-    @command('OSCILLO')
-    def reset_acquisition(self): pass
-
     @write_buffer('OSCILLO')
     def set_dac_buffer(self, data): pass
 
@@ -54,14 +51,11 @@ class Oscillo(Base):
         def reset(self): pass
         reset(self)
 
-    def set_dac(self, warning=False, reset=False):
+    def set_dac(self, warning=False):
         if warning:
             if np.max(np.abs(self.dac)) >= 1:
                 print('WARNING : dac out of bounds')
         self.set_dac_buffer(self.twoint14_to_uint32(self.dac))
-
-        if reset:
-            self.reset_acquisition()
 
     def reset(self):
         super(Oscillo, self).reset()

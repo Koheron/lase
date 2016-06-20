@@ -54,9 +54,6 @@ class Spectrum(Base):
         self.fit = np.zeros((2,100))
         self.i = 0
 
-    @command('SPECTRUM')
-    def reset_acquisition(self): pass
-
     @command('SPECTRUM','I')
     def set_n_avg_min(self, n_avg_min): pass
 
@@ -73,9 +70,6 @@ class Spectrum(Base):
             if np.max(np.abs(self.dac)) >= 1:
                 print('WARNING : dac out of bounds')
         self.set_dac_buffer(self.twoint14_to_uint32(self.dac))
-
-        if reset:
-            self.reset_acquisition()
     
     def open_spectrum(self):
         @command('SPECTRUM')
