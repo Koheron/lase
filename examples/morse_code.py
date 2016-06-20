@@ -26,7 +26,7 @@ phrase = list(phrase) #Arranges all the leters in a list.
 current = float(raw_input("Please enter laser current (0ma - 40ma):"))  # mA
 
 if current > 40:
-	print "Current too high! Chose current in range 0ma - 40ma."
+	print('Current too high! Chose current in range 0ma - 40ma.')
 	os._exit(0)
 
 
@@ -34,19 +34,19 @@ if current > 40:
 amp_mod = float(raw_input("Please enter modulation amplitude (0 - 1):"))
 
 if amp_mod > 1:
-	print "Modulation amplitude to high! Only range 0 - 1 is alowed."	
+	print('Modulation amplitude to high! Only range 0 - 1 is allowed.')	
 	os._exit(0)
 
 # Set modulaton frequency
 freq_mod = float(raw_input("Please enter modulation frequency (0 - 62.50MHz):"))  #Scientific notation is alowed ex: 1e6 = 1,000,000 Hz
 
 if freq_mod > 62.50e6:
-	print "Frequency to high! Only frequencies in the range 0Hz - 62.5MHz are alowed."
+	print('Frequency to high! Only frequencies in the range 0Hz - 62.5MHz are allowed.')
 	os._exit(0)
 
 # Function for creating a short signal - the dot.
 def dot():
-	print '.'
+	print('.')
 	#morsecode.append('.')
 	# Enable laser
 	driver.start_laser()
@@ -67,12 +67,12 @@ def dot():
 
 # Function for making a long signal - the dash.	
 def dash():
-	print'-'
+	print('-')
 	# Enable laser
 	driver.start_laser()
 	driver.set_laser_current(current)
 
-	driver.dac[1, :] = amp_mod*np.sin(2 * np.pi * freq_mod * driver.sampling.t)
+	driver.dac[1, :] = amp_mod * np.sin(2 * np.pi * freq_mod * driver.sampling.t)
 	driver.set_dac()
 
 	# Signal on ADC
@@ -111,21 +111,21 @@ capital = {'A' : 'a', 'B' : 'b', 'C' : 'c', 'D' : 'd', 'E' : 'e', 'F' : 'f', 'G'
 
 # This for-loop iteares over all the letters in the original
 # Input text - list "phrase".
-for i in phrase:
-	if i in capital:
-		i = capital['%s'%(i)] # Turns capital letters into small letters.
-	if i == ' ':	# prints a space, if a space is found in the text.
-		print ' '
+for letter in phrase:
+	if letter in capital:
+		letter = capital['%s'%(letter)] # Turns capital letters into small letters.
+	if letter == ' ':	# prints a space, if a space is found in the text.
+		print(' ')
 		time.sleep(.5)
 		
-	if i == '.':	# Prints "stop" when a punctuachion is found.
+	if letter == '.':	# Prints "stop" when a punctuachion is found.
 		print ' '
 		eval(letters['s']), eval(letters['t'])
 		eval(letters['o']), eval(letters['p'])
 		print 'stop'
-	if not (i == ' ' or i == '.' or i == ','): # Only letters are evaluated.
-		eval(letters['%s'%(i)])
-		print i
+	if not (letter == ' ' or letter == '.' or letter == ','): # Only letters are evaluated.
+		eval(letters['%s'%(letter)])
+		print(letter)
 
 # The last part of the for-loop, gathers the dictionary inputs, and uses the eval function and prints the corresponding letter from the text.
 

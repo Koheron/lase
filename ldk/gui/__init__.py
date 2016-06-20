@@ -1,6 +1,5 @@
 # __init__.py
 
-from .calibration_widget import CalibrationWidget
 from .cursor_widget import CursorWidget
 from .dac_widget import DacWidget
 from .base_widget import BaseWidget
@@ -15,8 +14,7 @@ from .spectrum_widget import SpectrumWidget
 from .stats_widget import StatsWidget
 from .save_widget import SaveWidget
 
-__all__ = ['CalibrationWidget',
-           'CursorWidget',
+__all__ = ['CursorWidget',
            'DacWidget',
            'BaseWidget',
            'SliderWidget',

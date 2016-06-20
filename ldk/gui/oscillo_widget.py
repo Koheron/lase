@@ -11,9 +11,7 @@ from .cursor_widget import CursorWidget
 from .stats_widget import StatsWidget
 from .select_channel_widget import SelectChannelWidget
 from .math_widget import MathWidget
-from .calibration_widget import CalibrationWidget
 from .save_widget import SaveWidget
-
 
 class OscilloWidget(BaseWidget):
     def __init__(self, oscillo, parent):
@@ -36,9 +34,6 @@ class OscilloWidget(BaseWidget):
         # Control
         self.control = QtGui.QWidget()
         self.tabs.addTab(self.control, "Control")
-        # Calibration
-        self.calibration_widget = CalibrationWidget(self.driver, data_path=self.data_path)
-        self.tabs.addTab(self.calibration_widget, "Calibration")
 
         # Display
         self.select_channel_widget = SelectChannelWidget(self.plot_widget)

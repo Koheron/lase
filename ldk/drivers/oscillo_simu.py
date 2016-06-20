@@ -62,32 +62,6 @@ class OscilloSimu(BaseSimu):
         self.adc[0, :] *= self.optical_power[0] / self.power[0]
         self.adc[1, :] *= self.optical_power[1] / self.power[1]
 
-    def get_amplitude_transfer_function(self, channel_dac=0, channel_adc=0,
-                                        transfer_avg=100):
-        n_freqs = self.sampling.n / 2 + 1
-        self.amplitude_transfer_function *= 0
-        for i in range(transfer_avg):
-            self.amplitudes = np.ones(n_freqs)
-            random_phases = 2 * np.pi * np.random.rand(n_freqs)
-            white_noise = np.fft.irfft(self.amplitudes *
-                          np.exp(1j * random_phases))
-            white_noise = np.fft.fft(white_noise)
-            white_noise[0] = 0.01
-            white_noise[self.sampling.n / 2] = 1
-            white_noise = np.real(np.fft.ifft(white_noise))
-            white_noise /= 1.7 * np.max(np.abs(white_noise))
-            self.dac[channel_dac, :] = white_noise
-            self.set_dac()
-            time.sleep(0.01)
-            self.get_adc()
-            self.amplitude_transfer_function += \
-                np.fft.fft(self.adc[channel_adc, :]) / np.fft.fft(white_noise)
-        self.amplitude_transfer_function = self.amplitude_transfer_function /\
-                                           transfer_avg
-        self.amplitude_transfer_function[0] = 1
-        self.dac[channel_dac, :] = np.zeros(self.sampling.n)
-        self.set_dac()
-
     def get_correction(self):
         tmp = np.fft.fft(self.amplitude_error) /\
               self.amplitude_transfer_function
@@ -111,7 +85,3 @@ class OscilloSimu(BaseSimu):
             fft_adc = np.abs(np.fft.fft(self.adc, axis=1))
             self.avg_spectrum += fft_adc[:, 0:self.base.sampling.n / 2]
         self.avg_spectrum = self.avg_spectrum / n_avg
-
-    def set_amplitude_transfer_function(self, amplitude_transfer_function):
-        self.amplitude_transfer_function = amplitude_transfer_function
-        self.model._amplitude_mtf = amplitude_transfer_function
