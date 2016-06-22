@@ -60,7 +60,7 @@ class Oscillo(Base):
             pass
         for channel in channels:
             data = np.mod(np.floor(8192 * self.dac[channel-1,:]) + 8192,16384) + 8192
-            set_dac_buffer(self, data[::2] + data[1::2] * 65536, channel)
+            set_dac_buffer(self, data[::2] + data[1::2] * 65536, channel-1)
         if reset:
             self.reset_acquisition()
 
