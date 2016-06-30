@@ -137,21 +137,21 @@ class ConnectWidget(QtGui.QWidget):
         self.local_instruments = {}
         self.parent.instrument_list = [''] * len(self.app_list)
         self.parent.update_buttons()
-        
+
     def install_instrument(self, instrument_name):
         self.http.install_instrument(instrument_name)
         return self.connect_to_tcp_server()
-        
+
     def connect_onclick(self):
         if not self.is_connected: # Connect
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             self.connection_info.setText('Disconnected')
             self.disconnect()
             self.connection_info.setText('Connecting to ' + self.host + ' ...')
-        
+
             self.http.set_ip(self.host)
             self.local_instruments = self.http.get_local_instruments()
-			
+
             if not self.local_instruments:
                 print('HTTP not available')
                 return
@@ -165,9 +165,12 @@ class ConnectWidget(QtGui.QWidget):
 
             # We load by default the first instrument available
             # and connect with tcp-server to check the connection
+
+            print next(instr for instr in self.parent.instrument_list if instr)
+
             if not self.install_instrument(next(instr for instr in self.parent.instrument_list if instr)):
                 return
-            
+
             self.connection_info.setText('Connected to ' + self.host)
             self.is_connected = True
             self.connect_button.setStyleSheet('QPushButton {color: red;}')
