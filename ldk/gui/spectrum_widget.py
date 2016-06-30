@@ -35,7 +35,7 @@ class SpectrumWidget(BaseWidget):
         self.lidar_widget = LidarWidget(self)
 
         # Save
-        self.save_widget = SaveWidget(self)
+        self.save_widget = SaveWidget('spectrum', self)
         self.save_box = QtGui.QGroupBox("Save")
         self.save_box.setLayout(self.save_widget.layout)
 

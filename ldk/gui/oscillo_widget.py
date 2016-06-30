@@ -52,7 +52,7 @@ class OscilloWidget(BaseWidget):
         self.math_box.setLayout(self.math_widget.layout)
 
         # Save
-        self.save_widget = SaveWidget(self)
+        self.save_widget = SaveWidget('oscillo', self)
         self.save_box = QtGui.QGroupBox("Save")
         self.save_box.setLayout(self.save_widget.layout)
 

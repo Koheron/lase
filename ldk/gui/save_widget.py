@@ -15,7 +15,7 @@ except ImportError:
     HAS_HDF5 = False
 
 class SaveWidget(QtGui.QWidget):
-    def __init__(self, app_widget):
+    def __init__(self, app_name, app_widget):
         super(SaveWidget, self).__init__()
         self.layout = QtGui.QVBoxLayout()
         self.app_widget = app_widget
@@ -25,6 +25,16 @@ class SaveWidget(QtGui.QWidget):
         self.save_button.setText('Save')
         self.layout.addWidget(self.save_button)
         self.save_button.clicked.connect(self.save_data)
+
+        if app_name == 'oscillo':
+            self.widget_list = [self.app_widget.stats_widget, 
+                                self.app_widget.math_widget,
+                                self.app_widget.select_channel_widget,
+                                self.app_widget.monitor_widget,
+                                self.app_widget.laser_widget]
+        elif app_name == 'spectrum':
+            self.widget_list = [self.app_widget.monitor_widget,
+                                self.app_widget.laser_widget]
 
     def save_data(self):
         if HAS_HDF5:
@@ -45,12 +55,8 @@ class SaveWidget(QtGui.QWidget):
     def dump_to_h5(self, filename):
         with h5py.File(filename, 'w') as f:
             self.save_metadata_as_h5(f)
-            self.app_widget.stats_widget.save_as_h5(f)
-            self.app_widget.math_widget.save_as_h5(f)
-            self.app_widget.select_channel_widget.save_as_h5(f)
+            (widget.save_as_h5(f) for widget in self.widget_list)
             self.app_widget.save_as_h5(f)
-            self.app_widget.monitor_widget.save_as_h5(f)
-            self.app_widget.laser_widget.save_as_h5(f)
 
     def dump_to_zip(self, filename):
         tmp_dir = os.path.join(os.path.dirname(filename), unicode(uuid.uuid4()))
@@ -58,13 +64,8 @@ class SaveWidget(QtGui.QWidget):
 
         _dict = {} # Contains elements to be dumped in json
         _dict['metadata'] = self.metadata()
-
-        self.app_widget.stats_widget.save_as_zip(_dict, tmp_dir)
-        self.app_widget.math_widget.save_as_zip(_dict, tmp_dir)
-        self.app_widget.select_channel_widget.save_as_zip(_dict, tmp_dir)
+        (widget.save_as_zip(_dict, tmp_dir) for widget in self.widget_list)
         self.app_widget.save_as_zip(_dict, tmp_dir)
-        self.app_widget.monitor_widget.save_as_zip(_dict, tmp_dir)
-        self.app_widget.laser_widget.save_as_zip(_dict, tmp_dir)
 
         with open(os.path.join(tmp_dir, 'data.json'), 'w') as f:
             json.dump(_dict, f)
