@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import numpy as np
 from pyqtgraph.Qt import QtGui
 from PyQt4.QtCore import SIGNAL, pyqtSignal
@@ -68,10 +69,12 @@ class SpectrumWidget(BaseWidget):
         self.spectrum = self.driver.spectrum - 0*self.calibration_widget.noise_floor
         self.lidar_widget.update(self.spectrum)
 
+        self.plot_x = 1e-6 * np.fft.fftshift(self.driver.sampling.f_fft)
+        self.plot_y = np.fft.fftshift(self.spectrum)
+
         if not self.lidar_widget.is_velocity_plot:
             self.plot_widget.dataItem.setData(
-                        1e-6 * np.fft.fftshift(self.driver.sampling.f_fft),
-                        np.fft.fftshift(self.spectrum),
+                        self.plot_x, self.plot_y,
                         pen=(0,4), clear=True, _callSync='off')
 
     def refresh_dac(self):
@@ -101,4 +104,13 @@ class SpectrumWidget(BaseWidget):
 
     def change_n_avg_min(self, value):
         self.driver.set_n_avg_min(int(value))
+
+    def save_as_h5(self, f):
+        pass
+
+    def save_as_zip(self, _dict, dest=''):
+        data = np.zeros((2, len(self.plot_x)))
+        data[0,:] = self.plot_x
+        data[1,:] = self.plot_y
+        np.save(os.path.join(dest, 'plot_data.npy'), data)
 

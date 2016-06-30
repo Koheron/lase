@@ -38,6 +38,7 @@ class LDKdataReader:
     def get_metadata(self):
         if self.file_type == 'H5':
             self.metadata = {
+                'App': self.file['h5_file_metadata/data'].attrs['App'],
                 'Date': self.file['h5_file_metadata/data'].attrs['Date'],
                 'Time': self.file['h5_file_metadata/data'].attrs['Time']
             }
@@ -89,23 +90,44 @@ class LDKdataReader:
         return self.select_channel
 
     def get_plot_data(self):
-        if self.file_type == 'H5':
-            self.data_x = self.file['plot/data_x'][()]
-            self.data_y = self.file['plot/data_y'][()]
-        elif self.file_type == 'ZIP':
-            data = np.load(os.path.join(self.tmp_dir, 'plot_data.npy'))
-            wfm_size = data.shape[1]
-            self.data_x = np.zeros((2, wfm_size))
-            self.data_y = np.zeros((2, wfm_size))
-            self.data_x[0,:] = data[0,:]
-            self.data_x[1,:] = data[1,:]
-            self.data_y[0,:] = data[2,:]
-            self.data_y[1,:] = data[3,:]
+        if self.metadata['App'] == 'oscillo':
+            if self.file_type == 'H5':
+                self.data_x = self.file['plot/data_x'][()]
+                self.data_y = self.file['plot/data_y'][()]
+            elif self.file_type == 'ZIP':
+                data = np.load(os.path.join(self.tmp_dir, 'plot_data.npy'))
+                wfm_size = data.shape[1]
+                self.data_x = np.zeros((2, wfm_size))
+                self.data_y = np.zeros((2, wfm_size))
+                self.data_x[0,:] = data[0,:]
+                self.data_x[1,:] = data[1,:]
+                self.data_y[0,:] = data[2,:]
+                self.data_y[1,:] = data[3,:]
+        elif self.metadata['App'] == 'spectrum':
+            if self.file_type == 'H5':
+                return 
+            elif self.file_type == 'ZIP':
+                data = np.load(os.path.join(self.tmp_dir, 'plot_data.npy'))
+                size = data.shape[1]
+                self.data_x = np.zeros(size)
+                self.data_y = np.zeros(size)
+                self.data_x = data[0,:]
+                self.data_y = data[1,:]
+
+    def _plot_oscillo_data(self):
+        plt.plot(np.transpose(self.data_x), np.transpose(self.data_y))
+        plt.show()
+
+    def _plot_spectrum_data(self):
+        plt.semilogy(np.transpose(self.data_x), np.transpose(self.data_y))
+        plt.show()
 
     def plot_data(self):
         self.get_plot_data()
-        plt.plot(np.transpose(self.data_x), np.transpose(self.data_y))
-        plt.show()
+        if self.metadata['App'] == 'oscillo':
+            self._plot_oscillo_data()
+        elif self.metadata['App'] == 'spectrum':
+            self._plot_spectrum_data()
 
     def get_monitor(self):
         if self.file_type == 'H5':
@@ -140,6 +162,7 @@ class LDKdataReader:
         print('\n--------------------------------------------------------------------------------')
         print('  Metadata')
         print('--------------------------------------------------------------------------------')
+        print('App        ' + self.metadata['App'])
         print('Date       ' + self.metadata['Date'])
         print('Time       ' + self.metadata['Time'])
 
@@ -203,9 +226,12 @@ class LDKdataReader:
 
     def print_all(self):
         self.print_metadata()
-        self.print_stats()
-        self.print_math()
-        self.print_select_channel()
+
+        if self.metadata['App'] == 'oscillo':
+            self.print_stats()
+            self.print_math()
+            self.print_select_channel()
+
         self.print_monitor()
         self.print_laser()
         print('\n')
