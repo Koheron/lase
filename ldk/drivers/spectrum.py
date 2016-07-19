@@ -58,25 +58,24 @@ class Spectrum(Base):
     def reset_acquisition(self): pass
 
     @command('SPECTRUM','I')
-    def set_n_avg_min(self, n_avg_min): pass
+    def set_n_avg_min(self, n_avg_min): 
+        """ Set the minimum of averages that will be computed on the FPGA
+        The effective number of averages is >= n_avg_min.
+        """
+        pass
 
     def reset_dac(self):
         @command('SPECTRUM')
         def reset(self): pass
         reset(self)
 
-    def set_dac(self, warning=False, reset=False, channels=[1,2]):
-        if warning:
-            if np.max(np.abs(self.dac)) >= 1:
-                print('WARNING : dac out of bounds')
+    def set_dac(self, channels=[0,1]):
         @write_buffer('SPECTRUM','I')
         def set_dac_buffer(self, data, channel):
             pass
         for channel in channels:
             data = np.mod(np.floor(8192 * self.dac[channel-1,:]) + 8192,16384) + 8192
-            set_dac_buffer(self, data[::2] + data[1::2] * 65536, channel-1)
-        if reset:
-            self.reset_acquisition()
+            set_dac_buffer(self, data[::2] + data[1::2] * 65536, channel)
     
     def open_spectrum(self):
         @command('SPECTRUM')
@@ -118,8 +117,7 @@ class Spectrum(Base):
 
     @command('SPECTRUM')
     def get_spectrum(self):
-        self.spectrum = self.client.recv_buffer(self.wfm_size,
-                                                data_type='float32')
+        self.spectrum = self.client.recv_buffer(self.wfm_size, data_type='float32')
 
         if self.fit_linewidth:
             idx = np.arange(2,200)

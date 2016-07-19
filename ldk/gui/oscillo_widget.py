@@ -126,7 +126,7 @@ class OscilloWidget(BaseWidget):
         if self.dac_wid[index].dac_on_off_button.text() == 'OFF':
             if not self.math_widget.correction:
                 self.driver.dac[index, :] = self.dac_wid[index].data
-                self.driver.set_dac(channels=[index+1])
+                self.driver.set_dac(channels=[index])
             else:
                 self.driver.ideal_amplitude_waveform \
                     = 1167 * self.driver.optical_power[0] / self.driver.power[0] * self.dac_wid[1].data

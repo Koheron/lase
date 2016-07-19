@@ -38,7 +38,11 @@ class Oscillo(Base):
         return self.client.recv_int32()
 
     @command('OSCILLO','I')
-    def set_n_avg_min(self, n_avg_min): pass
+    def set_n_avg_min(self, n_avg_min): 
+        """ Set the minimum of averages that will be computed on the FPGA
+        The effective number of averages is >= n_avg_min.
+        """
+        pass
 
     @command('OSCILLO','I')
     def set_period(self, period): pass
@@ -51,18 +55,17 @@ class Oscillo(Base):
         def reset(self): pass
         reset(self)
 
-    def set_dac(self, warning=False, reset=False, channels=[1,2]):
-        if warning:
-            if np.max(np.abs(self.dac)) >= 1:
-                print('WARNING : dac out of bounds')
+    def set_dac(self, channels=[0,1]):
+        """ Write the BRAM corresponding on the selected channels 
+        (dac0 or dac1) with the array stored in self.dac[channel,:].
+        ex: self.set_dac(channel=[0])
+        """
         @write_buffer('OSCILLO','I')
         def set_dac_buffer(self, data, channel):
             pass
         for channel in channels:
             data = np.mod(np.floor(8192 * self.dac[channel-1,:]) + 8192,16384) + 8192
-            set_dac_buffer(self, data[::2] + data[1::2] * 65536, channel-1)
-        if reset:
-            self.reset_acquisition()
+            set_dac_buffer(self, data[::2] + data[1::2] * 65536, channel)
 
     def reset(self):
         super(Oscillo, self).reset()
@@ -72,10 +75,12 @@ class Oscillo(Base):
 
     @command('OSCILLO', '?')
     def set_averaging(self, avg_status):
+        """ self.set_averaging(True) enables averaging. """
         pass
 
     @command('OSCILLO')
     def get_num_average(self):
+        """ Get the number of averages corresponding to the last acquisition. """
         n_avg = self.client.recv_uint32()
         return n_avg
 
@@ -84,6 +89,7 @@ class Oscillo(Base):
         return self.client.recv_buffer(2 * self.wfm_size, data_type='float32')
 
     def get_adc(self):
+        """ Read adc data and store it in self.adc. """
         data = self.read_all_channels()
         self.adc = np.reshape(data, (2, self.wfm_size))
 
