@@ -132,8 +132,9 @@ class OscilloWidget(BaseWidget):
                     = 1167 * self.driver.optical_power[0] / self.driver.power[0] * self.dac_wid[1].data
                 self.driver.amplitude_error = self.driver.ideal_amplitude_waveform
                 self.driver.dac[1, :] = self.driver.get_correction()
-                self.driver.set_dac()
+                self.driver.set_dac(channels=[index])
             self.refresh_dac()
+            print 'update_dac(), index = ', index
 
     def refresh_adc(self):
         for i in range(2):
