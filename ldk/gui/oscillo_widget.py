@@ -134,6 +134,7 @@ class OscilloWidget(BaseWidget):
                 self.driver.dac[1, :] = self.driver.get_correction()
                 self.driver.set_dac(channels=[index])
             self.refresh_dac()
+            print 'update_dac(), index = ', index
 
     def refresh_adc(self):
         for i in range(2):

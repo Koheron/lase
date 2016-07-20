@@ -134,4 +134,8 @@ class Oscillo(Base):
 
     @command('OSCILLO')
     def get_first_empty_bram_index(self):
+<<<<<<< HEAD
         return self.client.recv_uint32()
+=======
+        return self.client.recv_uint32()
+>>>>>>> 728f4d0af303e58ce7ff2693b6ad8efef3cff61f

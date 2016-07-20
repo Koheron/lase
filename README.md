@@ -14,7 +14,9 @@ The last number of the board IP address is displayed on binary format on the 8 R
 
 3) Make sure the following packages are installed:
 * Python (2.7+ or 3.5+) with Numpy and Scipy
+* Qt (`apt-get install python-qt4`)
 * PyQtGraph (`pip install pyqtgraph`)
+* requests (`pip install requests`)
 * koheron-tcp-client (`pip install --upgrade koheron-tcp-client`)
 
 4) Launch GUI:
