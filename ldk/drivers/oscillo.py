@@ -56,15 +56,8 @@ class Oscillo(Base):
         def set_dac_buffer(self, data, channel):
             pass
         for channel in channels:
-            data = np.mod(np.floor(8192 * self.dac[channel-1,:]) + 8192,16384) + 8192
+            data = np.uint32(np.mod(np.floor(8192 * self.dac[channel,:]) + 8192, 16384) + 8192)
             set_dac_buffer(self, data[::2] + data[1::2] * 65536, channel)
-            print 'channel = ', channel, ' first empty bram idx = ', self.get_first_empty_bram_index()
-
-    def reset(self):
-        super(Oscillo, self).reset()
-        self.reset_dac()
-        self.avg_on = False
-        self.set_averaging(self.avg_on)
 
     @command('OSCILLO', '?')
     def set_averaging(self, avg_status):
