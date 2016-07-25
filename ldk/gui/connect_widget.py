@@ -7,8 +7,9 @@ from PyQt4.QtGui import QApplication, QCursor
 import json
 import os
 import time
-from ..core import HTTPInterface
+import requests
 from koheron_tcp_client import KClient
+from ..utilities import install_instrument 
 
 class ConnectWidget(QtGui.QWidget):
     def __init__(self, parent, ip_path=None):
@@ -52,7 +53,6 @@ class ConnectWidget(QtGui.QWidget):
             self.set_text_from_ip(IP)
 
         self.set_host_from_text()
-        self.http = HTTPInterface(self.host)
 
         for i in range(4):
             def make_callback(idx):
@@ -139,7 +139,7 @@ class ConnectWidget(QtGui.QWidget):
         self.parent.update_buttons()
 
     def install_instrument(self, instrument_name):
-        self.http.install_instrument(instrument_name)
+        install_instrument(self.host, instrument_name)
         return self.connect_to_tcp_server()
 
     def connect_onclick(self):
@@ -148,13 +148,7 @@ class ConnectWidget(QtGui.QWidget):
             self.connection_info.setText('Disconnected')
             self.disconnect()
             self.connection_info.setText('Connecting to ' + self.host + ' ...')
-
-            self.http.set_ip(self.host)
-            self.local_instruments = self.http.get_local_instruments()
-
-            if not self.local_instruments:
-                print('HTTP not available')
-                return
+            self.local_instruments = requests.get('http://{}/api/instruments/local'.format(self.host)).json()
 
             for i, app in enumerate(self.app_list):
                 try:
@@ -165,9 +159,6 @@ class ConnectWidget(QtGui.QWidget):
 
             # We load by default the first instrument available
             # and connect with tcp-server to check the connection
-
-            print next(instr for instr in self.parent.instrument_list if instr)
-
             if not self.install_instrument(next(instr for instr in self.parent.instrument_list if instr)):
                 return
 

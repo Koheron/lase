@@ -3,7 +3,7 @@
 
 import initExample
 from koheron_tcp_client import KClient, command
-from utilities import load_instrument
+from ldk.utilities import load_instrument
 from ldk.drivers import Oscillo
 
 import os

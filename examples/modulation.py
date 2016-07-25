@@ -7,7 +7,7 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-from utilities import load_instrument
+from ldk.utilities import load_instrument
 from ldk.drivers import Oscillo
 
 host = os.getenv('HOST','192.168.1.100')
