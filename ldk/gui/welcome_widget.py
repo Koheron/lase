@@ -48,11 +48,12 @@ class WelcomeWidget(QtGui.QWidget):
 
         self.app_buttons = []
         for i, app in enumerate(self.instrument_list):
-            self.app_buttons.append(self.set_button(app.capitalize() +' (Simu)'))
+            self.app_buttons.append(self.set_button(''))
             self.drivers_layout.addWidget(self.app_buttons[i], 1, QtCore.Qt.AlignCenter)
             def make_callback(i):
                 return lambda : self.app_onclick(i)
             self.app_buttons[i].clicked.connect(make_callback(i))
+        self.update_buttons()
 
         # Left Layout
         self.view = QWebView()
