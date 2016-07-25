@@ -109,6 +109,9 @@ class ConnectWidget(QtGui.QWidget):
             self.line[index+1].setFocus()
             self.line[index+1].selectAll()
 
+    def load_instrument(self, instrument_name):
+        self.client = load_instrument(self.host, instrument_name)
+
     def disconnect(self):
         self.is_connected = False
         self.connect_button.setStyleSheet('QPushButton {color: green;}')
@@ -116,36 +119,34 @@ class ConnectWidget(QtGui.QWidget):
         self.local_instruments = {}
         self.parent.instrument_list = [''] * len(self.app_list)
         self.parent.update_buttons()
+        self.connection_info.setText('Disconnected')
 
-    def load_instrument(self, instrument_name):
-        self.client = load_instrument(self.host, instrument_name)
+    def connect(self):
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        self.connection_info.setText('Connecting to ' + self.host + ' ...')
+        self.local_instruments = requests.get('http://{}/api/instruments/local'.format(self.host)).json()
+        for i, app in enumerate(self.app_list):
+            try:
+               instrument = next(instr for instr in self.local_instruments if app in instr)
+               self.parent.instrument_list[i] = instrument
+            except StopIteration:
+               self.parent.instrument_list[i] = ''
+
+        # Load the first instrument available by default 
+        instrument_name = (next(instr for instr in self.parent.instrument_list if instr))
+        self.load_instrument(instrument_name)
+
+        self.connection_info.setText('Connected to ' + self.host)
+        self.is_connected = True
+        self.connect_button.setStyleSheet('QPushButton {color: red;}')
+        self.connect_button.setText('Disconnect')
+        self.parent.update_buttons()
+        QApplication.restoreOverrideCursor()
 
     def connect_onclick(self):
-        if not self.is_connected: # Connect
-            QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-            self.connection_info.setText('Disconnected')
-            self.disconnect()
-            self.connection_info.setText('Connecting to ' + self.host + ' ...')
-            self.local_instruments = requests.get('http://{}/api/instruments/local'.format(self.host)).json()
-            for i, app in enumerate(self.app_list):
-                try:
-                   instrument = next(instr for instr in self.local_instruments if app in instr)
-                   self.parent.instrument_list[i] = instrument
-                except StopIteration:
-                   self.parent.instrument_list[i] = ''
-
-            # Load the first instrument available by default 
-            instrument_name = (next(instr for instr in self.parent.instrument_list if instr))
-            self.load_instrument(instrument_name)
-
-            self.connection_info.setText('Connected to ' + self.host)
-            self.is_connected = True
-            self.connect_button.setStyleSheet('QPushButton {color: red;}')
-            self.connect_button.setText('Disconnect')
-            self.parent.update_buttons()
-            QApplication.restoreOverrideCursor()
-        else: # Disconnect
+        if not self.is_connected:
+            self.connect()
+        else:
             if hasattr(self, 'client'):
                 self.client.__del__()
-            self.connection_info.setText('Disconnected')
             self.disconnect()
