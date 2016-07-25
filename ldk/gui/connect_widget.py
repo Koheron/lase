@@ -43,10 +43,9 @@ class ConnectWidget(QtGui.QWidget):
 
         if os.path.exists(self.ip_path):
             try:
-                with open(os.path.join(self.ip_path, 'ip_address' + '.json')) as fp:
-                    json_data = fp.read()
-                    parameters = json.loads(json_data)
-                    ip = parameters['TCP_IP']
+                fp = open(os.path.join(self.ip_path, 'ip_address' + '.json'))
+                parameters = json.loads(fp.read())
+                ip = parameters['TCP_IP']
             except:
                 ip = '192.168.1.100'
             self.set_text_from_ip(ip)
@@ -80,9 +79,7 @@ class ConnectWidget(QtGui.QWidget):
         self.lay_ip.addWidget(self.lines[3])
 
     def set_text_from_ip(self, ip):
-        numbers = ip.split('.')
-        for i, line in enumerate(self.lines):
-            line.setText(str(numbers[i]))
+        map(lambda line, num: line.setText(num), self.lines, ip.split('.'))
 
     def get_host_from_text(self):
         return '.'.join(map(lambda x:str(x.text()), self.lines))
