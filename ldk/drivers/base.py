@@ -17,22 +17,12 @@ class Base(object):
 
     def __init__(self, wfm_size, client):
         self.client = client
-        self.open_laser()
-
         self.n = wfm_size
         self.max_current = 40  # mA
         self.sampling = Sampling(wfm_size, 125e6)
 
         self.opened = True
         self.dac = np.zeros((2, self.sampling.n))
-
-        self.failed = False
-
-    def open_laser(self):
-        @command('LASER')
-        def open(self):
-            return self.client.recv_int32()
-        open(self)
 
     def update(self):
         pass  # Used in BaseSimu

@@ -111,9 +111,6 @@ class OscilloWidget(BaseWidget):
             self.update_fourier()
         else:
             self.refresh_adc()
-        if self.driver.failed:
-            print("An error occured during update\nLeave Oscillo")
-            self.monitor_widget.close_session()
 
     def update_fourier(self):
         self.driver.get_avg_spectrum(self.math_widget.n_avg_spectrum)
@@ -134,7 +131,6 @@ class OscilloWidget(BaseWidget):
                 self.driver.dac[1, :] = self.driver.get_correction()
                 self.driver.set_dac(channels=[index])
             self.refresh_dac()
-            print 'update_dac(), index = ', index
 
     def refresh_adc(self):
         for i in range(2):
