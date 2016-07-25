@@ -77,11 +77,6 @@ class SpectrumWidget(BaseWidget):
                         self.plot_x, self.plot_y,
                         pen=(0,4), clear=True, _callSync='off')
 
-    def update_dac(self, index):
-        if self.dac_wid[index].dac_on_off_button.text() == 'OFF':
-            self.driver.dac[index, :] = self.dac_wid[index].data
-            self.driver.set_dac(channels=[index])
-
     def refresh_dac(self):
         pass
 

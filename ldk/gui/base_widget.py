@@ -109,8 +109,13 @@ class BaseWidget(QtGui.QWidget):
         self.left_panel_layout = QtGui.QVBoxLayout()
 
     def update(self):
-        self.driver.update()  # Used in simulation
         self.monitor_widget.update(frame_rate=self.frame_rate)
+
+    def update_dac(self, index):
+        if self.dac_wid[index].dac_on_off_button.text() == 'OFF':
+            self.driver.dac[index, :] = self.dac_wid[index].data
+            self.driver.set_dac(channels=[index])
+        self.refresh_dac()
         
     def right_panel_connect(self):
         self.show_right_panel = not self.show_right_panel

@@ -109,12 +109,6 @@ class OscilloWidget(BaseWidget):
                     1e-6 * self.driver.sampling.f_fft[1: self.driver.sampling.n / 2],
                     10 * np.log10((self.driver.avg_spectrum[i, 1:]) ** 2))
 
-    def update_dac(self, index):
-        if self.dac_wid[index].dac_on_off_button.text() == 'OFF':
-            self.driver.dac[index, :] = self.dac_wid[index].data
-            self.driver.set_dac(channels=[index])
-            self.refresh_dac()
-
     def refresh_adc(self):
         for i in range(2):
             self.plot_widget.dataItem[i].setData(1e6 * self.driver.sampling.t,
