@@ -43,7 +43,6 @@ class Oscillo(Base):
         """ Set the period of the averaging module and reset the module.
         """
         self.period = avg_period
-        # TODO : reset averaging module
         pass
 
     def set_dac(self, channels=[0,1]):

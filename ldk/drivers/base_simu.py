@@ -64,7 +64,7 @@ class BaseSimu(object):
         # Current in mA
         self._laser_current = current / 1000
 
-    def set_dac(self, warning=False):
+    def set_dac(self, channels=[0,1]):
         pass
 
     def get_bitstream_id(self):
