@@ -24,7 +24,7 @@ class LDKdataReader:
         if (extension == '.h5' or extension == '.hdf5') and HAS_HDF5:
             self.file_type = 'H5'
             self.file = h5py.File(filename)
-        elif extension == '.zip' and HAS_HDF5:
+        elif extension == '.zip':
             self.file_type = 'ZIP'
             zipf = zipfile.ZipFile(filename, 'r', zipfile.ZIP_DEFLATED)
             self.tmp_dir = os.path.join(os.path.dirname(filename), unicode(uuid.uuid4()))

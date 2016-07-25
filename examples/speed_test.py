@@ -25,6 +25,7 @@ def speed_test(host, n_pts=1000):
     for i in range(n_pts):
         if cmd == 'get_adc':
             driver.get_adc()
+            time.sleep(0.00001) # used to fix garbage collection pb
         elif cmd == 'get_num_average':
             driver.get_num_average()
         t = time.time()
