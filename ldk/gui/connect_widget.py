@@ -6,7 +6,6 @@ from PyQt4.QtGui import QApplication, QCursor
 
 import json
 import os
-import time
 import requests
 from koheron_tcp_client import KClient
 from ..utilities import load_instrument
@@ -47,27 +46,27 @@ class ConnectWidget(QtGui.QWidget):
                 with open(os.path.join(self.ip_path, 'ip_address' + '.json')) as fp:
                     json_data = fp.read()
                     parameters = json.loads(json_data)
-                    IP = parameters['TCP_IP']
+                    ip = parameters['TCP_IP']
             except:
-                IP = ['192', '168', '1', '1']
-            self.set_text_from_ip(IP)
+                ip = '192.168.1.100'
+            self.set_text_from_ip(ip)
 
-        self.set_host_from_text()
+        self.host = self.get_host_from_text()
 
-        for i in range(4):
+        for i, line in enumerate(self.lines):
             def make_callback(idx):
                 return lambda : self.ip_changed(idx)
-            self.line[i].textChanged.connect(make_callback(i))
+            line.textChanged.connect(make_callback(i))
 
         self.connect_button.clicked.connect(self.connect_onclick)
         
     def create_ip_layout(self):
         self.lay_ip = QtGui.QHBoxLayout()
-        self.line = []
+        self.lines = []
         for i in range(4):
-            self.line.append(QtGui.QLineEdit())
-            self.line[i].setFixedWidth(40)
-            self.line[i].setAlignment(QtCore.Qt.AlignCenter)
+            self.lines.append(QtGui.QLineEdit())
+            self.lines[i].setFixedWidth(40)
+            self.lines[i].setAlignment(QtCore.Qt.AlignCenter)
 
         self.point = []
         for i in range(3):
@@ -76,38 +75,29 @@ class ConnectWidget(QtGui.QWidget):
         self.lay_ip.addWidget(QtGui.QLabel('IP address: '))
 
         for i in range(3):
-            self.lay_ip.addWidget(self.line[i])
+            self.lay_ip.addWidget(self.lines[i])
             self.lay_ip.addWidget(self.point[i])
-        self.lay_ip.addWidget(self.line[3])
+        self.lay_ip.addWidget(self.lines[3])
 
     def set_text_from_ip(self, ip):
-        for i in range(4):
-            self.line[i].setText(str(ip[i]))
+        numbers = ip.split('.')
+        for i, line in enumerate(self.lines):
+            line.setText(str(numbers[i]))
 
-    def set_host_from_text(self):
-        self.host = ''
-        for i in range(3):
-            self.host += self.line[i].text() + '.'
-        self.host += self.line[3].text()
-        self.host = str(self.host)
-
-    def get_ip_from_text(self):
-        ip = []
-        for i in range(4):
-            ip.append(str(self.line[i].text()))
-        return ip
+    def get_host_from_text(self):
+        return '.'.join(map(lambda x:str(x.text()), self.lines))
 
     def ip_changed(self, index):
-        self.set_host_from_text()
+        self.host = self.get_host_from_text()
         parameters = {}
-        parameters['TCP_IP'] = self.get_ip_from_text()
+        parameters['TCP_IP'] = self.host
         if not os.path.exists(self.ip_path):
             os.makedirs(self.ip_path)
         with open(os.path.join(self.ip_path, 'ip_address' + '.json'), 'w') as fp:
             json.dump(parameters, fp)
-        if self.line[index].cursorPosition() == 3 and index < 3:
-            self.line[index+1].setFocus()
-            self.line[index+1].selectAll()
+        if self.lines[index].cursorPosition() == 3 and index < 3:
+            self.lines[index+1].setFocus()
+            self.lines[index+1].selectAll()
 
     def load_instrument(self, instrument_name):
         self.client = load_instrument(self.host, instrument_name)
@@ -144,9 +134,7 @@ class ConnectWidget(QtGui.QWidget):
         QApplication.restoreOverrideCursor()
 
     def connect_onclick(self):
-        if not self.is_connected:
-            self.connect()
-        else:
-            if hasattr(self, 'client'):
-                self.client.__del__()
+        if self.is_connected:
             self.disconnect()
+        else:
+            self.connect()
