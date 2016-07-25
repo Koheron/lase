@@ -14,6 +14,7 @@ else:
     import urllib
 # http://stackoverflow.com/questions/17960942/attributeerror-module-object-has-no-attribute-urlretrieve
 
+
 from ..drivers import Oscillo, Spectrum
 from .oscillo_widget import OscilloWidget
 from .spectrum_widget import SpectrumWidget
@@ -93,7 +94,7 @@ class WelcomeWidget(QtGui.QWidget):
         instrument = self.instrument_list[app_idx]
         if instrument != '':
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-            self.connect_widget.install_instrument(instrument)
+            self.connect_widget.load_instrument(instrument)
             driver = globals()[app.capitalize()](self.connect_widget.client)
             driver.init()
             QApplication.restoreOverrideCursor()

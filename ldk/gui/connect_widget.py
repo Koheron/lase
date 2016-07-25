@@ -9,7 +9,7 @@ import os
 import time
 import requests
 from koheron_tcp_client import KClient
-from ..utilities import install_instrument 
+from ..utilities import load_instrument
 
 class ConnectWidget(QtGui.QWidget):
     def __init__(self, parent, ip_path=None):
@@ -109,27 +109,6 @@ class ConnectWidget(QtGui.QWidget):
             self.line[index+1].setFocus()
             self.line[index+1].selectAll()
 
-    def connect_to_tcp_server(self):
-        if hasattr(self, 'client'):
-            self.client.__del__()
-
-        self.client = KClient(self.host, verbose=False)
-        n_steps_timeout = 50
-        cnt_timeout = 0
-
-        while not self.client.is_connected:
-            time.sleep(0.015)
-            cnt_timeout += 1
-
-            if cnt_timeout > n_steps_timeout:
-                self.connection_info.setText(
-                    'Failed to connect to host\nCheck IP address')
-                self.disconnect()
-                QApplication.restoreOverrideCursor()
-                return False
-        QApplication.restoreOverrideCursor()
-        return True
-
     def disconnect(self):
         self.is_connected = False
         self.connect_button.setStyleSheet('QPushButton {color: green;}')
@@ -138,9 +117,8 @@ class ConnectWidget(QtGui.QWidget):
         self.parent.instrument_list = [''] * len(self.app_list)
         self.parent.update_buttons()
 
-    def install_instrument(self, instrument_name):
-        install_instrument(self.host, instrument_name)
-        return self.connect_to_tcp_server()
+    def load_instrument(self, instrument_name):
+        self.client = load_instrument(self.host, instrument_name)
 
     def connect_onclick(self):
         if not self.is_connected: # Connect
@@ -149,7 +127,6 @@ class ConnectWidget(QtGui.QWidget):
             self.disconnect()
             self.connection_info.setText('Connecting to ' + self.host + ' ...')
             self.local_instruments = requests.get('http://{}/api/instruments/local'.format(self.host)).json()
-
             for i, app in enumerate(self.app_list):
                 try:
                    instrument = next(instr for instr in self.local_instruments if app in instr)
@@ -157,10 +134,9 @@ class ConnectWidget(QtGui.QWidget):
                 except StopIteration:
                    self.parent.instrument_list[i] = ''
 
-            # We load by default the first instrument available
-            # and connect with tcp-server to check the connection
-            if not self.install_instrument(next(instr for instr in self.parent.instrument_list if instr)):
-                return
+            # Load the first instrument available by default 
+            instrument_name = (next(instr for instr in self.parent.instrument_list if instr))
+            self.load_instrument(instrument_name)
 
             self.connection_info.setText('Connected to ' + self.host)
             self.is_connected = True
