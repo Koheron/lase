@@ -38,19 +38,7 @@ class ConnectWidget(QtGui.QWidget):
         self.lay.addLayout(self.lay_connection)
         self.setLayout(self.lay)
 
-        if not os.path.exists(self.ip_path):
-            os.makedirs(self.ip_path)
-
-        if os.path.exists(self.ip_path):
-            try:
-                fp = open(os.path.join(self.ip_path, 'ip_address' + '.json'))
-                parameters = json.loads(fp.read())
-                ip = parameters['TCP_IP']
-            except:
-                ip = '192.168.1.100'
-            self.set_text_from_ip(ip)
-
-        self.host = self.get_host_from_text()
+        self.retrieve_ip_address()
 
         for i, line in enumerate(self.lines):
             def make_callback(idx):
@@ -58,24 +46,40 @@ class ConnectWidget(QtGui.QWidget):
             line.textChanged.connect(make_callback(i))
 
         self.connect_button.clicked.connect(self.connect_onclick)
-        
+
+    def retrieve_ip_address(self):
+        if not os.path.exists(self.ip_path):
+            os.makedirs(self.ip_path)
+
+        if os.path.exists(self.ip_path):
+            try:
+                fp = open(os.path.join(self.ip_path, 'ip_address' + '.json'))
+                parameters = json.loads(fp.read())
+                ip = parameters['ip_address']
+            except:
+                ip = '192.168.1.100'
+            self.set_text_from_ip(ip)
+
+        self.host = self.get_host_from_text()      
+
+
     def create_ip_layout(self):
         self.lay_ip = QtGui.QHBoxLayout()
+
         self.lines = []
         for i in range(4):
             self.lines.append(QtGui.QLineEdit())
             self.lines[i].setFixedWidth(40)
             self.lines[i].setAlignment(QtCore.Qt.AlignCenter)
 
-        self.point = []
+        self.points = []
         for i in range(3):
-            self.point.append(QtGui.QLabel('.'))
+            self.points.append(QtGui.QLabel('.'))
 
         self.lay_ip.addWidget(QtGui.QLabel('IP address: '))
-
         for i in range(3):
             self.lay_ip.addWidget(self.lines[i])
-            self.lay_ip.addWidget(self.point[i])
+            self.lay_ip.addWidget(self.points[i])
         self.lay_ip.addWidget(self.lines[3])
 
     def set_text_from_ip(self, ip):
@@ -87,7 +91,7 @@ class ConnectWidget(QtGui.QWidget):
     def ip_changed(self, index):
         self.host = self.get_host_from_text()
         parameters = {}
-        parameters['TCP_IP'] = self.host
+        parameters['ip_address'] = self.host
         if not os.path.exists(self.ip_path):
             os.makedirs(self.ip_path)
         with open(os.path.join(self.ip_path, 'ip_address' + '.json'), 'w') as fp:
