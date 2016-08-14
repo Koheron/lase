@@ -5,6 +5,7 @@ dependencies:
         - sudo pip install matplotlib
         - sudo pip install pyqtgraph
         - sudo pip install pytest
+        - sudo pip install tabulate
         - sudo pip install koheron-tcp-client
 
 test:
