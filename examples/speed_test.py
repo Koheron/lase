@@ -13,7 +13,7 @@ from ldk.drivers import Oscillo
 host = os.getenv('HOST','192.168.1.100')
 cmd = os.getenv('CMD','get_adc')
 
-def speed_test(host, n_pts=1000):
+def speed_test(host, n_pts=100):
     time_array = np.zeros(n_pts)
     client = load_instrument(host, instrument='oscillo')
     driver = Oscillo(client)
@@ -32,14 +32,12 @@ def speed_test(host, n_pts=1000):
         time_array[i] = t - t_prev
         print host, i, time_array[i]
         t_prev = t
-        
+    
     print '{} us'.format(1E6 * np.median(time_array))
+    assert(np.median(time_array) < 0.0025)
+    return time_array
 
-    plt.plot(1E6 * time_array)
-    driver.close()
-
-speed_test(host,n_pts=10000)
-
+plt.plot(1E6 * speed_test(host))
 plt.xlabel('Trial #')
 plt.ylabel('Time (us)')
 plt.show()
