@@ -5,7 +5,7 @@ import time
 import numpy as np
 
 from .base import Base
-from koheron_tcp_client import command, write_buffer
+from koheron import command, write_buffer
 
 # Lorentzian fit
 from scipy.optimize import leastsq
@@ -90,7 +90,7 @@ class Spectrum(Base):
     def set_demod_buffer(self, data):
         pass
 
-    @write_buffer('SPECTRUM', format_char='f', dtype=np.float32)
+    @write_buffer('SPECTRUM', fmt='f', dtype=np.float32)
     def set_noise_floor_buffer(self, data):
         pass
 
@@ -106,7 +106,7 @@ class Spectrum(Base):
 
     @command('SPECTRUM')
     def get_spectrum(self):
-        self.spectrum = self.client.recv_buffer(self.wfm_size, data_type='float32')
+        self.spectrum = self.client.recv_array(self.wfm_size, dtype='float32')
 
         if self.fit_linewidth:
             idx = np.arange(1000,4000)

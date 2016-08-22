@@ -17,7 +17,7 @@ The last number of the board IP address is displayed on binary format on the 8 R
 * Qt (`apt-get install python-qt4`)
 * PyQtGraph (`pip install pyqtgraph`)
 * requests (`pip install requests`)
-* koheron-tcp-client (`pip install --upgrade koheron-tcp-client`)
+* koheron-tcp-client (`pip install koheron`)
 
 4) Launch GUI:
 
@@ -31,7 +31,7 @@ You will need to enter the board IP adress to connect to the board.
 
 ## Build your custom FPGA bitstream
 
-You can build custom bitstreams from the reference designs in the [zynq-sdk](https://github.com/Koheron/zynq-sdk) repository.
+You can build custom bitstreams from the reference designs in the [koheron-sdk](https://github.com/Koheron/koheron-sdk) repository.
 
 ## Copyright
 

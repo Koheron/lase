@@ -6,7 +6,7 @@ import math
 import numpy as np
 
 from .base import Base
-from koheron_tcp_client import command, write_buffer
+from koheron import command, write_buffer
 
 class Oscillo(Base):
     """ Driver for the oscillo bitstream
@@ -70,7 +70,7 @@ class Oscillo(Base):
 
     @command('OSCILLO')
     def read_all_channels(self):
-        return self.client.recv_buffer(2 * self.wfm_size, data_type='float32')
+        return self.client.recv_array(2 * self.wfm_size, dtype='float32')
 
     def get_adc(self):
         """ Read adc data and store it in self.adc. """

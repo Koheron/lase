@@ -10,7 +10,7 @@ import csv
 import time
 from scipy import signal
 
-from ldk.utilities import load_instrument
+from koheron import load_instrument
 from ldk.drivers import Oscillo
 
 host = os.getenv('HOST','192.168.1.100')

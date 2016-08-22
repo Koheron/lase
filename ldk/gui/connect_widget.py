@@ -7,8 +7,7 @@ from PyQt4.QtGui import QApplication, QCursor
 import json
 import os
 import requests
-from koheron_tcp_client import KClient
-from ..utilities import load_instrument
+from koheron import KoheronClient, load_instrument
 
 class ConnectWidget(QtGui.QWidget):
     def __init__(self, parent, ip_path=None):

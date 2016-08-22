@@ -9,7 +9,7 @@ import matplotlib
 matplotlib.use('GTKAgg')
 from matplotlib import pyplot as plt
 
-from ldk.utilities import load_instrument
+from koheron import load_instrument
 from ldk.drivers import Spectrum
 
 # Load the spectrum instrument

@@ -2,7 +2,7 @@
 
 import os
 import pytest
-from koheron_tcp_client import KClient
+from koheron import KoheronClient
 from ..utilities import install_instrument
 from ..drivers import Oscillo
 
@@ -12,7 +12,7 @@ class TestConnection:
     def test(self):
         host = os.getenv('HOST','192.168.1.100')
         install_instrument(host, 'oscillo')
-        client = KClient(host)  
+        client = KoheronClient(host)  
         assert client.is_connected
         driver = Oscillo(client)
         current = 30 #mA

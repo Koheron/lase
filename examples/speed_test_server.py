@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import initExample
-from koheron_tcp_client import KClient, command
-from ldk.utilities import load_instrument
+from koheron import command, load_instrument
 from ldk.drivers import Oscillo
 
 import os
@@ -15,18 +14,9 @@ class SpeedTest(Oscillo):
     def __init__(self, client):
         super(SpeedTest, self).__init__(client)
 
-        if self.open_speed_test() < 0:
-            print('Cannot open device SPEED_TEST')
-        
     @command('OSCILLO','III')
     def read_all_channels_decim(self, decim_factor, index_low, index_high):
          self.tmp = self.client.recv_buffer(2 * (index_high - index_low) / decim_factor, data_type='uint32')
-
-    def open_speed_test(self):
-        @command('SPEED_TEST')
-        def open(self):
-            return self.client.recv_int32()
-        return open(self)
 
     def get_adc(self, method):
         if method == 'read_zeros':
