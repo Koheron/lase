@@ -170,10 +170,10 @@ class DataReader:
         print('\n--------------------------------------------------------------------------------')
         print('  Stats')
         print('--------------------------------------------------------------------------------')
-        print tabulate([['Average', self.stats['average'][0], self.stats['average'][1]],
+        print(tabulate([['Average', self.stats['average'][0], self.stats['average'][1]],
                        ['Peak-peak', self.stats['peak_peak'][0], self.stats['peak_peak'][1]],
                        ['Average', self.stats['rms'][0], self.stats['rms'][1]]], 
-                       headers=['', 'Chan 1', 'Chan 2'], tablefmt="plain")
+                       headers=['', 'Chan 1', 'Chan 2'], tablefmt="plain"))
 
     def print_math(self):
         self.get_math()
