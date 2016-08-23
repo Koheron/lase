@@ -52,7 +52,7 @@ class Spectrum(Base):
         self.fit = np.zeros((2,100))
         self.i = 0
 
-    @command('SPECTRUM','I')
+    @command('Spectrum','I')
     def set_n_avg_min(self, n_avg_min): 
         """ Set the minimum of averages that will be computed on the FPGA
         The effective number of averages is >= n_avg_min.
@@ -60,12 +60,12 @@ class Spectrum(Base):
         pass
 
     def reset_dac(self):
-        @command('SPECTRUM')
+        @command('Spectrum')
         def reset(self): pass
         reset(self)
 
     def set_dac(self, channels=[0,1]):
-        @command('SPECTRUM','IA')
+        @command('Spectrum','IA')
         def set_dac_buffer(self, channel, data):
             pass
         for channel in channels:
@@ -78,19 +78,19 @@ class Spectrum(Base):
         self.avg_on = True
         self.set_averaging(self.avg_on)
 
-    @command('SPECTRUM', 'I')
+    @command('Spectrum', 'I')
     def set_scale_sch(self, scale_sch):
         pass
 
-    @command('SPECTRUM', 'II')
+    @command('Spectrum', 'II')
     def set_offset(self, offset_real, offset_imag):
         pass
 
-    @write_buffer('SPECTRUM')
+    @write_buffer('Spectrum')
     def set_demod_buffer(self, data):
         pass
 
-    @write_buffer('SPECTRUM', fmt='f', dtype=np.float32)
+    @write_buffer('Spectrum', fmt='f', dtype=np.float32)
     def set_noise_floor_buffer(self, data):
         pass
 
@@ -104,7 +104,7 @@ class Spectrum(Base):
         self.noise_floor = noise_floor
         self.set_noise_floor_buffer(self.noise_floor)
 
-    @command('SPECTRUM')
+    @command('Spectrum')
     def get_spectrum(self):
         self.spectrum = self.client.recv_array(self.wfm_size, dtype='float32')
 
@@ -126,46 +126,46 @@ class Spectrum(Base):
                 plt.semilogy(freq, psd, freq, psd_fit)
                 plt.show()
 
-    @command('SPECTRUM')
+    @command('Spectrum')
     def get_num_average(self):
         return self.client.recv_uint32()
 
-    @command('SPECTRUM')
+    @command('Spectrum')
     def get_peak_address(self):
         return self.client.recv_uint32()
 
-    @command('SPECTRUM')
+    @command('Spectrum')
     def get_peak_maximum(self):
         return self.client.recv_int(4, fmt='f')
 
-    @command('SPECTRUM', 'II')
+    @command('Spectrum', 'II')
     def set_address_range(self, address_low, address_high):
         pass
 
-    @command('SPECTRUM', '?')
+    @command('Spectrum', '?')
     def set_averaging(self, avg_status): pass
 
     # === Peak data stream
 
     def get_peak_values(self):
-        @command('SPECTRUM')
+        @command('Spectrum')
         def store_peak_fifo_data(self):
             return self.client.recv_uint32()
 
         self.peak_stream_length = store_peak_fifo_data(self)
 
-        @command('SPECTRUM')
+        @command('Spectrum')
         def get_peak_fifo_data(self):
             return self.client.recv_buffer(self.peak_stream_length, data_type='uint32')
 
         return get_peak_fifo_data(self)
 
-    @command('SPECTRUM')
+    @command('Spectrum')
     def get_peak_fifo_length(self):
         return self.client.recv_uint32()
 
-    @command('SPECTRUM', 'I')
+    @command('Spectrum', 'I')
     def fifo_start_acquisition(self, acq_period): pass
 
-    @command('SPECTRUM')
+    @command('Spectrum')
     def fifo_stop_acquisition(self): pass
