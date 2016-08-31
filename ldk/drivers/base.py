@@ -5,7 +5,7 @@ import numpy as np
 import math
 
 from ..signal import Sampling
-from koheron import command, write_buffer
+from koheron import command
 
 class Base(object):
     """ This class is used as a base class for `Oscillo` and `Spectrum`
@@ -40,36 +40,36 @@ class Base(object):
 
         reset(self)
 
-    @command('Laser')
+    @command(classname='Laser')
     def start_laser(self): pass
 
-    @command('Laser')
+    @command(classname='Laser')
     def stop_laser(self): pass
 
-    @command('Laser')
+    @command(classname='Laser')
     def get_laser_current(self):
         return (0.0001/21.) * self.client.recv_uint32()
 
-    @command('Laser')
+    @command(classname='Laser')
     def get_laser_power(self):
         return self.client.recv_uint32()
 
-    @command('Laser')
+    @command(classname='Laser')
     def get_monitoring(self):
         return self.client.recv_tuple()
 
-    @command('Laser', 'f')
+    @command(classname='Laser')
     def set_laser_current(self, current):
         """ current: The bias in mA """
         pass
 
-    @command('Common')
+    @command(classname='Common')
     def get_bitstream_id(self): pass
 
-    @command('Common', 'I')
+    @command(classname='Common')
     def set_led(self, value): pass
 
-    @command('Common')
+    @command(classname='Common')
     def init(self): pass
 
     def twoint14_to_uint32(self, data):
