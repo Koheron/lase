@@ -80,14 +80,13 @@ class MathWidget(QtGui.QWidget):
         self.connect(self.n_avg_min_slider, SIGNAL("value(float)"), self.change_n_avg_min)
 
     def change_averaging(self):
-        self.driver.avg_on = not self.driver.avg_on
-        if self.driver.avg_on:
+        self.driver.averaging = not self.driver.averaging
+        if self.driver.averaging:
             self.avg_on_button.setStyleSheet('QPushButton {color: red;}')
             self.avg_on_button.setText('Stop averaging')
         else:
             self.avg_on_button.setStyleSheet('QPushButton {color: green;}')
             self.avg_on_button.setText('Start averaging')
-        self.driver.set_averaging(self.driver.avg_on)
 
     def fourier_connect(self, state):
         if state == QtCore.Qt.Checked:
@@ -111,7 +110,7 @@ class MathWidget(QtGui.QWidget):
         self.n_avg_spectrum = self.avg_spin.value()
 
     def change_n_avg_min(self, value):
-        self.driver.set_n_avg_min(int(value))
+        self.driver.n_avg = int(value)
 
     def save_as_h5(self, f):
         math_grp = f.create_group('math')

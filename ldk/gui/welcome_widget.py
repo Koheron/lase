@@ -94,7 +94,7 @@ class WelcomeWidget(QtGui.QWidget):
         instrument = self.instrument_list[app_idx]
         if instrument != '':
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-            self.connect_widget.load_instrument(instrument)
+            self.connect_widget.koheron_connect(instrument)
             driver = globals()[app.capitalize()](self.connect_widget.client)
             driver.init()
             QApplication.restoreOverrideCursor()

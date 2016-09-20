@@ -16,31 +16,66 @@ class Oscillo(Base):
         self.wfm_size = 8192
         super(Oscillo, self).__init__(self.wfm_size, client)
    
-        self.avg_on = False
+        self.__period = self.wfm_size
+        self.__averaging = False
 
-        self.period = self.wfm_size
         self.adc = np.zeros((2, self.wfm_size))
         self.spectrum = np.zeros((2, self.wfm_size / 2))
         self.avg_spectrum = np.zeros((2, self.wfm_size / 2))
 
-    @command()
-    def set_dac_periods(self, period0, period1):
-        """ Select the periods played on each address generator
-        ex: self.set_dac_periods(8192, 4096)
-        """
+    @property
+    def period(self):
+        return self.__period
+
+    @period.setter
+    @command(classname='Oscillo', funcname='set_avg_period')
+    def period(self, avg_period):
+        """ Set the period of the averaging module and reset the module. """
+        self.__period = avg_period
         pass
 
-    @command()
-    def set_n_avg_min(self, n_avg_min): 
+    @property
+    def dac_periods(self):
+        return self.__dac_periods
+
+    @dac_periods.setter
+    @command(classname='Oscillo', funcname='set_dac_periods')
+    def dac_periods(self, dac_periods):
+        """ Select the periods played on each address generator """
+        self.__dac_periods = dac_periods
+        pass
+
+    @property
+    def n_avg(self, channel):
+        """ Get the number of averages corresponding to the last acquisition """
+        @command(classname='Oscillo')
+        def get_num_average(self, channel):
+            return self.client.recv_uint32()
+        self.__n_avg = get_num_average(self, 0)
+        return self.__n_avg
+
+    @n_avg.setter
+    @command(classname='Oscillo', funcname='set_n_avg_min')
+    def n_avg(self, n_avg_min): 
         """ Set the minimum of averages that will be computed on the FPGA
         The effective number of averages is >= n_avg_min.
         """
         pass
 
+    @property
+    def averaging(self):
+        return self.__averaging
+    
+    @averaging.setter
+    @command(classname='Oscillo', funcname='set_averaging')
+    def averaging(self, avg_status):
+        """ True enables averaging """
+        self.__averaging = avg_status
+
+
     @command()
     def set_avg_period(self, avg_period):
-        """ Set the period of the averaging module and reset the module.
-        """
+        """ Set the period of the averaging module and reset the module. """
         self.period = avg_period
         pass
 
@@ -55,17 +90,6 @@ class Oscillo(Base):
         for channel in channels:
             data = np.uint32(np.mod(np.floor(8192 * self.dac[channel,:]) + 8192, 16384) + 8192)
             set_dac_buffer(self, channel, data[::2] + data[1::2] * 65536)
-
-    @command()
-    def set_averaging(self, avg_status):
-        """ self.set_averaging(True) enables averaging. """
-        pass
-
-    @command()
-    def get_num_average(self, channel):
-        """ Get the number of averages corresponding to the last acquisition. """
-        n_avg = self.client.recv_uint32()
-        return n_avg
 
     @command()
     def read_all_channels(self):
@@ -105,13 +129,15 @@ class Oscillo(Base):
         """
         pass
 
-    @command()
-    def get_counter(self):
+    @property
+    @command(classname='Oscillo', funcname='get_counter')
+    def counter(self):
         """ Return a 64 bits integer that counts the number of clock 
         cycles (8 ns) between the startup of the FPGA and the last trigger
         (beginning of the last acquisition).
         """
-        return self.client.recv_int(8, fmt='Q')
+        self.__counter = self.client.recv(fmt='Q')
+        return self.__counter
 
     @command()
     def reset_acquisition(self): 

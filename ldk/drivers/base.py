@@ -37,7 +37,6 @@ class Base(object):
     def reset_laser(self):
         @command('Laser')
         def reset(self): pass
-
         reset(self)
 
     @command(classname='Laser')
@@ -46,28 +45,27 @@ class Base(object):
     @command(classname='Laser')
     def stop_laser(self): pass
 
-    @command(classname='Laser')
-    def get_laser_current(self):
-        return (0.0001/21.) * self.client.recv_uint32()
+    @property
+    @command(classname='Laser', funcname='get_laser_current')
+    def laser_current(self):
+        self.__laser_current = (0.0001/21.) * self.client.recv_uint32()
+        return self.__laser_current
 
-    @command(classname='Laser')
-    def get_laser_power(self):
-        return self.client.recv_uint32()
+    @property
+    @command(classname='Laser', funcname='get_laser_power')
+    def laser_power(self):
+        self.__laser_power = self.client.recv_uint32()
+        return self.__laser_power
 
     @command(classname='Laser')
     def get_monitoring(self):
         return self.client.recv_tuple()
 
-    @command(classname='Laser')
-    def set_laser_current(self, current):
+    @laser_current.setter
+    @command(classname='Laser', funcname='set_laser_current')
+    def laser_current(self, current):
         """ current: The bias in mA """
         pass
-
-    @command(classname='Common')
-    def get_bitstream_id(self): pass
-
-    @command(classname='Common')
-    def set_led(self, value): pass
 
     @command(classname='Common')
     def init(self): pass

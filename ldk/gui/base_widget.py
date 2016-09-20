@@ -35,7 +35,7 @@ class BaseWidget(QtGui.QWidget):
 
         # Initialize driver
         self.driver.set_dac()
-        self.power_offset = self.driver.get_laser_power()
+        self.power_offset = self.driver.laser_power
 
         # Layout
         self.init_layout()

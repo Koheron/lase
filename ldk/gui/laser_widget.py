@@ -16,8 +16,8 @@ class LaserWidget(QtGui.QWidget):
         self.laser_on = laser_on
         self.laser_current = laser_current
 
-        self.driver.set_laser_current(self.laser_current *
-                                                self.laser_on)
+        self.driver.laser_current = self.laser_current * self.laser_on
+
         # Layout
         self.layout = QtGui.QHBoxLayout()
         # Laser ON/OFF button
@@ -49,7 +49,7 @@ class LaserWidget(QtGui.QWidget):
 
     def change_current(self, value):
         self.laser_current = value
-        self.driver.set_laser_current(self.laser_current)
+        self.driver.laser_current = self.laser_current
 
     def save_as_h5(self, f):
         laser_grp = f.create_group('laser')

@@ -30,12 +30,10 @@ class SelectChannelWidget(QtGui.QWidget):
     def show_adc(self, index):
         self.plot_widget.show_adc[index] = self.adc_checkbox[index].isChecked()
         self.plot_widget.dataItem[index].setVisible(self.plot_widget.show_adc[index])        
-        self.plot_widget.enableAutoRange()
 
     def show_dac(self, index):
         self.plot_widget.show_dac[index] = self.dac_checkbox[index].isChecked()
         self.plot_widget.dataItem[2+index].setVisible(self.plot_widget.show_dac[index])
-        self.plot_widget.enableAutoRange()
         
     def uncheck_all(self):
         for i in range(2):

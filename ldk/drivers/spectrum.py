@@ -155,7 +155,7 @@ class Spectrum(Base):
 
         @command(classname='Spectrum')
         def get_peak_fifo_data(self):
-            return self.client.recv_buffer(self.peak_stream_length, data_type='uint32')
+            return self.client.recv_array(self.peak_stream_length, dtype='uint32')
 
         return get_peak_fifo_data(self)
 
