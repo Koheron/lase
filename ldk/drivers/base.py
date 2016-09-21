@@ -75,4 +75,4 @@ class Base(object):
     def twoint14_to_uint32(self, data):
         data1 = np.mod(np.floor(8192 * data[0, :]) + 8192,16384) + 8192
         data2 = np.mod(np.floor(8192 * data[1, :]) + 8192,16384) + 8192
-        return data1 + 65536 * data2
+        return np.uint32(data1 + 65536 * data2)
