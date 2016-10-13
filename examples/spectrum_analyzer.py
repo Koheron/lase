@@ -9,12 +9,12 @@ import matplotlib
 matplotlib.use('GTKAgg')
 from matplotlib import pyplot as plt
 
-from koheron import load_instrument
+from koheron import connect
 from ldk.drivers import Spectrum
 
 # Load the spectrum instrument
 host = os.getenv('HOST','192.168.1.100')
-client = load_instrument(host, instrument='spectrum')
+client = connect(host, name='spectrum')
 driver = Spectrum(client)
 
 # Enable laser

@@ -19,6 +19,7 @@ from ..drivers import Oscillo, Spectrum
 from .oscillo_widget import OscilloWidget
 from .spectrum_widget import SpectrumWidget
 from .connect_widget import ConnectWidget
+from koheron import connect
 
 class WelcomeWidget(QtGui.QWidget):
     """ This widget allows to connect to one of the available drivers.
@@ -94,7 +95,7 @@ class WelcomeWidget(QtGui.QWidget):
         instrument = self.instrument_list[app_idx]
         if instrument != '':
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-            self.connect_widget.load_instrument(instrument)
+            self.connect_widget.client = connect(self.connect_widget.host, name=instrument)
             driver = globals()[app.capitalize()](self.connect_widget.client)
             driver.init()
             QApplication.restoreOverrideCursor()

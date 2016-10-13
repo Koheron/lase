@@ -9,12 +9,12 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-from koheron import load_instrument
+from koheron import connect
 from ldk.drivers import Oscillo
 
 # Enter board IP
 host = os.getenv('HOST','10.42.0.53')
-client = load_instrument(host, instrument='oscillo')
+client = connect(host, name='oscillo')
 driver = Oscillo(client)
 
 # Making a method for text input. Only small letters, commas, and punctuation marks allowed.

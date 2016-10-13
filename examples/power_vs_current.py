@@ -11,7 +11,7 @@ from koheron import connect
 from ldk.drivers import Oscillo
 
 host = os.getenv('HOST','192.168.1.100')
-client = connect(host, instrument='oscillo')
+client = connect(host, name='oscillo')
 driver = Oscillo(client)
 
 driver.start_laser()

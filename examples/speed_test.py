@@ -7,7 +7,7 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-from koheron import load_instrument
+from koheron import connect
 from ldk.drivers import Oscillo
 
 host = os.getenv('HOST','192.168.1.100')
@@ -15,7 +15,7 @@ cmd = os.getenv('CMD','get_adc')
 
 def speed_test(host, n_pts=1000):
     time_array = np.zeros(n_pts)
-    client = load_instrument(host, instrument='oscillo')
+    client = connect(host, instrument='oscillo')
     driver = Oscillo(client)
     driver.set_averaging(False)
 

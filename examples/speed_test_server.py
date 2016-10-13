@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import initExample
-from koheron import command, load_instrument
+from koheron import command, connect
 from ldk.drivers import Oscillo
 
 import os
@@ -89,7 +89,7 @@ def read(driver, methods, n_pts=1000):
 
 
 host = os.getenv('HOST','192.168.1.100')
-client = load_instrument(host, instrument='oscillo')
+client = connect(host, name='oscillo')
 driver = SpeedTest(client)
 
 

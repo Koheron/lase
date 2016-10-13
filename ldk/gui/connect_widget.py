@@ -7,7 +7,7 @@ from PyQt4.QtGui import QApplication, QCursor
 import json
 import os
 import requests
-from koheron import KoheronClient, load_instrument
+from koheron import connect
 
 class ConnectWidget(QtGui.QWidget):
     def __init__(self, parent, ip_path=None):
@@ -124,7 +124,7 @@ class ConnectWidget(QtGui.QWidget):
 
         # Load the first instrument available by default 
         instrument_name = (next(instr for instr in self.parent.instrument_list if instr))
-        self.load_instrument(instrument_name)
+        self.client = connect(self.host, name=instrument_name)
 
         self.connection_info.setText('Connected to ' + self.host)
         self.is_connected = True

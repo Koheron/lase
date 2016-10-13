@@ -10,11 +10,11 @@ import csv
 import time
 from scipy import signal
 
-from koheron import load_instrument
+from koheron import connect
 from ldk.drivers import Oscillo
 
 host = os.getenv('HOST','192.168.1.100')
-client = load_instrument(host, instrument='oscillo')
+client = connect(host, name='oscillo')
 driver = Oscillo(client)
 
 current = 30 #mA
