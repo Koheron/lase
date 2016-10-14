@@ -105,7 +105,10 @@ def main():
     # Icon to show in task bar for Windows
     if platform.system() == 'Windows':
         myappid = 'koheron.ldk'
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+        try:
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+        except: 
+            pass
 
     window = KWindow(app)
 
