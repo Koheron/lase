@@ -32,9 +32,9 @@ python interface.py
 
 ![Demo](https://cloud.githubusercontent.com/assets/1735094/9765362/317e8212-5714-11e5-8480-ab3e311260c9.gif)
 
-## Build your custom FPGA bitstream
+## Build your custom instrument
 
-You can build custom bitstreams from the reference designs in the [koheron-sdk](https://github.com/Koheron/koheron-sdk) repository.
+You can build custom instruments using reference designs in the [koheron-sdk](https://github.com/Koheron/koheron-sdk) repository.
 
 ## Copyright
 
