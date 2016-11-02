@@ -15,7 +15,7 @@ cmd = os.getenv('CMD','get_adc')
 
 def speed_test(host, n_pts=1000):
     time_array = np.zeros(n_pts)
-    client = connect(host, instrument='oscillo')
+    client = connect(host, name='oscillo')
     driver = Oscillo(client)
     driver.set_averaging(False)
 
@@ -31,9 +31,9 @@ def speed_test(host, n_pts=1000):
         time_array[i] = t - t_prev
         print host, i, time_array[i]
         t_prev = t
-    
+
     print '{} us'.format(1E6 * np.median(time_array))
-    assert(np.median(time_array) < 0.003)
+#    assert(np.median(time_array) < 0.003)
     return time_array
 
 plt.plot(1E6 * speed_test(host))
