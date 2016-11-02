@@ -41,3 +41,5 @@ pip-delete-this-directory.txt
 
 *.bit
 tmp
+
+packages.txt
