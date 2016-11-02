@@ -22,6 +22,8 @@ python examples/power_vs_current.py
 
 [How to set up a network connection for the Red Pitaya and find its IP address.](https://www.koheron.com/support/redpitaya-ip-address)
 
+[See more examples](https://github.com/Koheron/laser-development-kit/tree/master/examples).
+
 ## Graphical User Interface
 
 ```sh
