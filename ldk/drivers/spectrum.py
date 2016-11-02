@@ -4,7 +4,7 @@
 import time
 import numpy as np
 
-from .base import Base
+from ..signal import Sampling
 from koheron import command
 
 # Lorentzian fit
@@ -18,13 +18,15 @@ def residuals(p, y, f):
     return y - lorentzian(f, p)
 
 
-class Spectrum(Base):
+class Spectrum(object):
     """ Driver for the spectrum bitstream """
 
     def __init__(self, client, verbose=False):
+        self.client = client
         self.wfm_size = 4096
-        super(Spectrum, self).__init__(self.wfm_size, client)
-        
+        self.max_current = 40  # mA
+        self.sampling = Sampling(self.wfm_size, 125e6)
+
         self.fifo_start_acquisition(1000)
 
         self.avg_on = True
@@ -38,7 +40,7 @@ class Spectrum(Base):
         self.noise_floor = np.zeros(self.wfm_size, dtype=np.float32)
 
         # self.set_offset(0, 0)
- 
+
         self.set_address_range(0, 0)
 
         self.set_demod()
@@ -52,8 +54,59 @@ class Spectrum(Base):
         self.fit = np.zeros((2,100))
         self.i = 0
 
+        self.opened = True
+        self.dac = np.zeros((2, self.sampling.n))
+
+    def close(self):
+        self.stop_laser()
+        self.reset()
+
+
+    def reset_laser(self):
+        @command('Laser')
+        def reset(self): pass
+
+        reset(self)
+
+    @command(classname='Laser')
+    def start_laser(self): pass
+
+    @command(classname='Laser')
+    def stop_laser(self): pass
+
+    @command(classname='Laser')
+    def get_laser_current(self):
+        return (0.0001/21.) * self.client.recv_uint32()
+
+    @command(classname='Laser')
+    def get_laser_power(self):
+        return self.client.recv_uint32()
+
+    @command(classname='Laser')
+    def get_monitoring(self):
+        return self.client.recv_tuple()
+
+    @command(classname='Laser')
+    def set_laser_current(self, current):
+        """ current: The bias in mA """
+        pass
+
+    @command(classname='Common')
+    def get_bitstream_id(self): pass
+
+    @command(classname='Common')
+    def set_led(self, value): pass
+
+    @command(classname='Common')
+    def init(self): pass
+
+    def twoint14_to_uint32(self, data):
+        data1 = np.mod(np.floor(8192 * data[0, :]) + 8192,16384) + 8192
+        data2 = np.mod(np.floor(8192 * data[1, :]) + 8192,16384) + 8192
+        return np.uint32(data1 + 65536 * data2)
+
     @command()
-    def set_n_avg_min(self, n_avg_min): 
+    def set_n_avg_min(self, n_avg_min):
         """ Set the minimum of averages that will be computed on the FPGA
         The effective number of averages is >= n_avg_min.
         """
@@ -72,7 +125,7 @@ class Spectrum(Base):
             set_dac_buffer(self, channel, data[::2] + data[1::2] * 65536)
 
     def reset(self):
-        super(Spectrum, self).reset()
+        self.reset_laser()
         self.reset_dac()
         self.avg_on = True
         self.set_averaging(self.avg_on)
