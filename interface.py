@@ -86,7 +86,7 @@ class KWindow(QtGui.QMainWindow):
 
                 self.stacked_widget.removeWidget(widget)
                 self.stacked_widget.currentWidget().setFocus()
-                
+
     def closeEvent(self, event):
         if self.stacked_widget.currentIndex() != 0:
                 self.stacked_widget.currentWidget().driver.close()
@@ -107,7 +107,7 @@ def main():
         myappid = 'koheron.ldk'
         try:
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-        except: 
+        except:
             pass
 
     window = KWindow(app)
@@ -116,9 +116,9 @@ def main():
     i = 0
     # Start the update loop:
     while window.session_opened:
-        i = i+1  
+        i = i+1
         window.update()
-        time_ = time.time() 
+        time_ = time.time()
         window.frame_rate = 0.95 * window.frame_rate + 0.05/(0.001+time_-prev_time)
         QtGui.QApplication.processEvents()
         prev_time = time_

@@ -13,6 +13,7 @@ from .welcome_widget import WelcomeWidget
 from .spectrum_widget import SpectrumWidget
 from .stats_widget import StatsWidget
 from .save_widget import SaveWidget
+from .data_reader import DataReader
 
 __all__ = ['CursorWidget',
            'DacWidget',
@@ -26,5 +27,6 @@ __all__ = ['CursorWidget',
            'WelcomeWidget',
            'SpectrumWidget',
            'StatsWidget',
-           'SaveWidget'
+           'SaveWidget',
+           'DataReader'
           ]

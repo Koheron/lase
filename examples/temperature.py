@@ -45,7 +45,7 @@ window = 0.5 * (1-np.cos(2 * np.pi * np.arange(4095) / 4095))
 with open('temperature.csv','w') as f:
 	for i in range(50000000):
 		driver.get_adc()
-		
+
 		# Separate positive and negative slopes in the triangle waveform
 		adc_pos = driver.adc[0,0:4095]
 		adc_neg = driver.adc[0,4096:8191]
@@ -55,16 +55,16 @@ with open('temperature.csv','w') as f:
 
 		phase_adc_pos = np.angle(fft_pos)
 		phase_adc_neg = np.angle(fft_neg)
-		
-		# The phase of the frequency modulation 
+
+		# The phase of the frequency modulation
 		phase_pos = phase_adc_pos[6]
 		phase_neg = phase_adc_pos[6]
-		
+
 		plt.clf()
 
 		diff_pos = -(phase_pos - phase_previous_neg + np.pi)%(2*np.pi)-np.pi
 		diff_neg = +(phase_neg - phase_previous_neg + np.pi)%(2*np.pi)-np.pi
-	  
+
 		diff = diff_pos + diff_neg/2
 
 		data = np.roll(data, -1, axis=0)

@@ -5,7 +5,7 @@ import time
 import math
 import numpy as np
 
-from ..signal import Sampling
+from sampling import Sampling
 from koheron import command
 
 class Oscillo(object):
