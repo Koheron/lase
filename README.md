@@ -8,14 +8,14 @@
 * koheron-python (`pip install koheron`)
 * PyQtGraph (`pip install pyqtgraph`) - only for the Graphical User Interface
 
+[How to set up a network connection for the Red Pitaya and find its IP address.](https://www.koheron.com/support/redpitaya-ip-address)
+
 ## Script examples
 
 ```sh
 export HOST=192.168.1.100 # Red Pitaya IP address
 python examples/power_vs_current.py
 ```
-
-[How to set up a network connection for the Red Pitaya and find its IP address.](https://www.koheron.com/support/redpitaya-ip-address)
 
 [See more examples](https://github.com/Koheron/laser-development-kit/tree/master/examples).
 
