@@ -2,13 +2,8 @@
 
 ## Requirements
 
-### Hardware
-
 * [Koheron Laser board](https://www.koheron.com/laser-development-kit)
 * Red Pitaya board with the [latest release](https://github.com/Koheron/koheron-sdk/releases/) installed on the SD card
-
-### Python
-
 * Python (2.7+ or 3.5+) with Numpy and Scipy
 * koheron-python (`pip install koheron`)
 * PyQtGraph (`pip install pyqtgraph`) - only for the Graphical User Interface
