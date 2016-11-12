@@ -80,7 +80,8 @@ class ConnectWidget(QtGui.QWidget):
         self.lay_ip.addWidget(self.lines[3])
 
     def set_text_from_ip(self, ip):
-        map(lambda line, num: line.setText(num), self.lines, ip.split('.'))
+        for i, num in enumerate(ip.split('.')):
+            self.lines[i].setText(num)
 
     def get_host_from_text(self):
         return '.'.join(map(lambda x:str(x.text()), self.lines))
