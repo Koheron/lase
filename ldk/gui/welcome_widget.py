@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from pyqtgraph.Qt import QtGui, QtCore
-from PyQt4.QtWebKit import QWebView
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QApplication, QCursor
 import time
 import os
 import sys
@@ -58,9 +55,7 @@ class WelcomeWidget(QtGui.QWidget):
         self.update_buttons()
 
         # Left Layout
-        self.view = QWebView()
-        self.view.load(QtCore.QUrl.fromLocalFile(os.path.join(self.parent.static_path, 'welcome.html')))       
-        self.left_layout.addWidget(self.view)
+
 
         # Right layout
         self.right_layout.addLayout(self.connect_layout)
@@ -87,17 +82,17 @@ class WelcomeWidget(QtGui.QWidget):
 
     def update_buttons(self):
         for i, button in enumerate(self.app_buttons):
-            button.setText(self.parent.app_list[i].capitalize() + 
+            button.setText(self.parent.app_list[i].capitalize() +
                            (' not available ' if (self.instrument_list[i] == '') else ''))
 
     def app_onclick(self, app_idx):
         app = self.app_list[app_idx]
         instrument = self.instrument_list[app_idx]
         if instrument != '':
-            QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+            QtGui.QApplication.setOverrideCursor(QtGui.QCursor(Qt.WaitCursor))
             self.connect_widget.client = connect(self.connect_widget.host, name=instrument)
             driver = globals()[app.capitalize()](self.connect_widget.client)
             driver.init()
-            QApplication.restoreOverrideCursor()
+            QtGui.QApplication.restoreOverrideCursor()
             index = self.parent.stacked_widget.addWidget(globals()[app.capitalize()+'Widget'](driver, self.parent))
             self.parent.stacked_widget.setCurrentIndex(index)

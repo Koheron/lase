@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from pyqtgraph.Qt import QtGui
+from pyqtgraph.Qt import QtGui, QtCore
 from .slider_widget import SliderWidget
-from PyQt4.QtCore import SIGNAL, pyqtSignal
 import numpy as np
 
 class LaserWidget(QtGui.QWidget):
 
-    laser_updated_signal = pyqtSignal(int)
+    laser_updated_signal = QtCore.pyqtSignal(int)
 
     def __init__(self, driver, laser_on=False, laser_current=0):
         super(LaserWidget, self).__init__()

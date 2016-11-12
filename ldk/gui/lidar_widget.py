@@ -5,7 +5,6 @@ from pyqtgraph.Qt import QtGui
 from .plot_widget import PlotWidget
 from .plot_widget import RollingPlot
 from .slider_widget import SliderWidget
-from PyQt4.QtCore import SIGNAL, pyqtSignal
 import numpy as np
 import collections
 
@@ -80,9 +79,9 @@ class LidarWidget(QtGui.QWidget):
         self.spectrum_widget.plot_widget.set_axis()
 
     def change_fmin(self, value):
-        self.driver.set_address_range(np.uint32(value*1e6/self.driver.sampling.df), 
+        self.driver.set_address_range(np.uint32(value*1e6/self.driver.sampling.df),
                                       np.uint32(self.slider_dict['f_max'].value*1e6/self.driver.sampling.df))
-        
+
     def change_fmax(self, value):
-        self.driver.set_address_range(np.uint32(self.slider_dict['f_min'].value*1e6/self.driver.sampling.df), 
-                                      np.uint32(value*1e6/self.driver.sampling.df)) 
+        self.driver.set_address_range(np.uint32(self.slider_dict['f_min'].value*1e6/self.driver.sampling.df),
+                                      np.uint32(value*1e6/self.driver.sampling.df))

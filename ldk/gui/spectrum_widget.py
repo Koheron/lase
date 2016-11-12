@@ -2,8 +2,7 @@
 
 import os
 import numpy as np
-from pyqtgraph.Qt import QtGui
-from PyQt4.QtCore import SIGNAL, pyqtSignal
+from pyqtgraph.Qt import QtGui, QtCore
 
 from .base_widget import BaseWidget
 from .plot_widget import PlotWidget
@@ -13,15 +12,11 @@ from .lidar_widget import LidarWidget
 from .slider_widget import SliderWidget
 from .save_widget import SaveWidget
 
-from PyQt4.QtCore import pyqtSignal
-
 class SpectrumWidget(BaseWidget):
-
-    #offset_updated_signal = pyqtSignal(int)
 
     def __init__(self, spectrum, parent):
         super(SpectrumWidget, self).__init__(spectrum, parent)
-        
+
         self.driver = spectrum
 
         # Layouts

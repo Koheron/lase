@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from pyqtgraph.Qt import QtGui, QtCore
-from PyQt4.QtCore import SIGNAL, pyqtSignal
 from .slider_widget import SliderWidget
 import numpy as np
 
@@ -30,7 +29,7 @@ class MathWidget(QtGui.QWidget):
         self.fourier_checkbox = QtGui.QCheckBox('Fourier Transform', self)
         self.fourier_checkbox.setCheckState(QtCore.Qt.Unchecked)
 
-        # Select minimum number of averages 
+        # Select minimum number of averages
         self.n_avg_min_label = QtGui.QLabel()
         self.n_avg_min_label.setText('Min. # of averages')
         self.n_avg_min_spin = QtGui.QSpinBox()
@@ -49,7 +48,7 @@ class MathWidget(QtGui.QWidget):
         self.avg_spin.setMinimum(1)
         self.avg_spin.setValue(1)
 
-        # Average on 
+        # Average on
         self.avg_on_button = QtGui.QPushButton()
         self.avg_on_button.setStyleSheet('QPushButton {color: green;}')
         self.avg_on_button.setText('Start averaging')

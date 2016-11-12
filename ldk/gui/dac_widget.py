@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from pyqtgraph.Qt import QtGui
+from pyqtgraph.Qt import QtGui, QtCore
 from .slider_widget import SliderWidget
-from PyQt4.QtCore import SIGNAL, pyqtSignal
+#from PyQt4.QtCore import SIGNAL, pyqtSignal
 import numpy as np
 from scipy import signal
 import collections
@@ -26,7 +26,7 @@ class DacWidget(QtGui.QWidget):
     This widget is used to control the DACs of a driver.
     """
 
-    data_updated_signal = pyqtSignal(int)
+    data_updated_signal = QtCore.pyqtSignal(int)
 
     def __init__(self, driver, index=0):
         super(DacWidget, self).__init__()

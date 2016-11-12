@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from pyqtgraph.Qt import QtGui, QtCore
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QApplication, QCursor
 
 import json
 import os
@@ -59,7 +57,7 @@ class ConnectWidget(QtGui.QWidget):
                 ip = '192.168.1.100'
             self.set_text_from_ip(ip)
 
-        self.host = self.get_host_from_text()      
+        self.host = self.get_host_from_text()
 
 
     def create_ip_layout(self):
@@ -112,7 +110,7 @@ class ConnectWidget(QtGui.QWidget):
         self.connection_info.setText('Disconnected')
 
     def connect(self):
-        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtGui.QApplication.setOverrideCursor(QtGui.QCursor(Qt.WaitCursor))
         self.connection_info.setText('Connecting to ' + self.host + ' ...')
         self.local_instruments = requests.get('http://{}/api/instruments/local'.format(self.host)).json()
         for i, app in enumerate(self.app_list):
@@ -122,7 +120,7 @@ class ConnectWidget(QtGui.QWidget):
             except StopIteration:
                self.parent.instrument_list[i] = ''
 
-        # Load the first instrument available by default 
+        # Load the first instrument available by default
         instrument_name = (next(instr for instr in self.parent.instrument_list if instr))
         self.client = connect(self.host, name=instrument_name)
 
@@ -131,7 +129,7 @@ class ConnectWidget(QtGui.QWidget):
         self.connect_button.setStyleSheet('QPushButton {color: red;}')
         self.connect_button.setText('Disconnect')
         self.parent.update_buttons()
-        QApplication.restoreOverrideCursor()
+        QtGui.QApplication.restoreOverrideCursor()
 
     def connect_onclick(self):
         if self.is_connected:
