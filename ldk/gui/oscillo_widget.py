@@ -106,7 +106,7 @@ class OscilloWidget(BaseWidget):
         self.driver.get_avg_spectrum(self.math_widget.n_avg_spectrum)
         for i in range(2):
             self.plot_widget.dataItem[i].setData(
-                    1e-6 * self.driver.sampling.f_fft[1: self.driver.sampling.n / 2],
+                    1e-6 * self.driver.sampling.f_fft[1: int(self.driver.sampling.n / 2)],
                     10 * np.log10((self.driver.avg_spectrum[i, 1:]) ** 2))
 
     def refresh_adc(self):

@@ -5,7 +5,7 @@ import time
 import math
 import numpy as np
 
-from sampling import Sampling
+from .sampling import Sampling
 from koheron import command
 
 class Oscillo(object):
@@ -22,8 +22,8 @@ class Oscillo(object):
 
         self.period = self.wfm_size
         self.adc = np.zeros((2, self.wfm_size))
-        self.spectrum = np.zeros((2, self.wfm_size / 2))
-        self.avg_spectrum = np.zeros((2, self.wfm_size / 2))
+        self.spectrum = np.zeros((2, int(self.wfm_size / 2)))
+        self.avg_spectrum = np.zeros((2, int(self.wfm_size / 2)))
 
         self.opened = True
         self.dac = np.zeros((2, self.sampling.n))
@@ -137,11 +137,11 @@ class Oscillo(object):
         self.spectrum = fft_adc[:, 0:self.wfm_size / 2]
 
     def get_avg_spectrum(self, n_avg=1):
-        self.avg_spectrum = np.zeros((2, self.wfm_size / 2))
+        self.avg_spectrum = np.zeros((2, int(self.wfm_size / 2)))
         for i in range(n_avg):
             self.get_adc()
             fft_adc = np.abs(np.fft.fft(self.adc, axis=1))
-            self.avg_spectrum += fft_adc[:, 0:self.wfm_size / 2]
+            self.avg_spectrum += fft_adc[:, 0:int(self.wfm_size / 2)]
         self.avg_spectrum /= n_avg
 
     # -------------------------------

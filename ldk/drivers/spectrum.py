@@ -4,7 +4,7 @@
 import time
 import numpy as np
 
-from sampling import Sampling
+from .sampling import Sampling
 from koheron import command
 
 # Lorentzian fit
