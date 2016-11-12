@@ -4,6 +4,9 @@ from pyqtgraph.Qt import QtGui, QtCore
 
 
 class SliderWidget(QtGui.QWidget):
+
+    valueChanged = QtCore.pyqtSignal([float])
+
     def __init__(self, name ='Value : ', step = 0.01, min_slider = 0, max_slider = None, layout=True):
         self.name = name
         super(SliderWidget, self).__init__()
@@ -39,18 +42,17 @@ class SliderWidget(QtGui.QWidget):
         self.slider.valueChanged.connect(self.sliderChanged)
         self.spin.valueChanged.connect(self.spinChanged)
 
+
+
     def sliderChanged(self):
         if self.flag == True:
             self.value = self.slider.value()*self.step
             self.spin.setValue(self.value)
-            self.valueChanged()
+            self.valueChanged.emit()
 
     def spinChanged(self):
         self.flag = False
         self.value = self.spin.value()
         self.slider.setValue(int(self.value/self.step))
-        self.valueChanged()
+        self.valueChanged.emit()
         self.flag = True
-
-    def valueChanged(self):
-        self.emit(SIGNAL("value(float)"), self.value)

@@ -56,8 +56,8 @@ class LidarWidget(QtGui.QWidget):
 
         self.velocity = 0
 
-        self.connect(self.slider_dict['f_min'], SIGNAL("value(float)"), self.change_fmin)
-        self.connect(self.slider_dict['f_max'], SIGNAL("value(float)"), self.change_fmax)
+        self.slider_dict['f_min'].valueChanged.connect(self.change_fmin)
+        self.slider_dict['f_max'].valueChanged.connect(self.change_fmax)
 
     def update(self, spectrum):
         self.velocity = self.driver.get_peak_values() * self.driver.sampling.df * 1e-6 * 1.29

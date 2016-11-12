@@ -89,7 +89,7 @@ class WelcomeWidget(QtGui.QWidget):
         app = self.app_list[app_idx]
         instrument = self.instrument_list[app_idx]
         if instrument != '':
-            QtGui.QApplication.setOverrideCursor(QtGui.QCursor(Qt.WaitCursor))
+            QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
             self.connect_widget.client = connect(self.connect_widget.host, name=instrument)
             driver = globals()[app.capitalize()](self.connect_widget.client)
             driver.init()

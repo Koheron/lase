@@ -110,7 +110,7 @@ class ConnectWidget(QtGui.QWidget):
         self.connection_info.setText('Disconnected')
 
     def connect(self):
-        QtGui.QApplication.setOverrideCursor(QtGui.QCursor(Qt.WaitCursor))
+        QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
         self.connection_info.setText('Connecting to ' + self.host + ' ...')
         self.local_instruments = requests.get('http://{}/api/instruments/local'.format(self.host)).json()
         for i, app in enumerate(self.app_list):

@@ -53,7 +53,7 @@ class SpectrumWidget(BaseWidget):
         self.control_layout.addStretch(1)
 
         self.avg_on_button.clicked.connect(self.change_averaging)
-        self.connect(self.n_avg_min_slider, SIGNAL("value(float)"), self.change_n_avg_min)
+        self.n_avg_min_slider.valueChanged.connect(self.change_n_avg_min)
 
         self.right_panel_widget.setLayout(self.control_layout)
 

@@ -76,7 +76,7 @@ class MathWidget(QtGui.QWidget):
         self.avg_on_button.clicked.connect(self.change_averaging)
         self.fourier_checkbox.stateChanged.connect(self.fourier_connect)
         self.avg_spin.valueChanged.connect(self.avg_connect)
-        self.connect(self.n_avg_min_slider, SIGNAL("value(float)"), self.change_n_avg_min)
+        self.n_avg_min_slider.valueChanged.connect(self.change_n_avg_min)
 
     def change_averaging(self):
         self.driver.avg_on = not self.driver.avg_on

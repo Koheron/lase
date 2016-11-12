@@ -61,7 +61,7 @@ class KWindow(QtGui.QMainWindow):
         self.show()
 
         self.stacked_widget.currentWidget().setFocus()
-        self.connect(self, SIGNAL('triggered()'), self.closeEvent)
+        #self.connect(self, SIGNAL('triggered()'), self.closeEvent)
 
         self.start_time = time.time()
         self.prev_time = 0

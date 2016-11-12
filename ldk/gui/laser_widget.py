@@ -32,7 +32,7 @@ class LaserWidget(QtGui.QWidget):
         self.layout.addWidget(self.on_button, 0)
         self.layout.addWidget(self.slider)
 
-        self.connect(self.slider, SIGNAL("value(float)"), self.change_current)
+        self.slider.valueChanged.connect(self.change_current)
         self.on_button.clicked.connect(self.stop_laser)
 
     def stop_laser(self):
