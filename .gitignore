@@ -43,3 +43,5 @@ pip-delete-this-directory.txt
 tmp
 
 packages.txt
+
+*.csv
