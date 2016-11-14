@@ -203,6 +203,5 @@ class Spectrum(object):
         def get_peak_fifo_data(self):
             return self.client.recv_vector(dtype='uint32')
         data = get_peak_fifo_data(self)
-        print(self.get_peak_address())
         return data
 
