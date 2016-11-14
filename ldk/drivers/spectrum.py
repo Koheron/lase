@@ -26,9 +26,6 @@ class Spectrum(object):
         self.wfm_size = 4096
         self.max_current = 40  # mA
         self.sampling = Sampling(self.wfm_size, 125e6)
-
-        self.fifo_start_acquisition(1000)
-
         self.avg_on = True
 
         self.spectrum = np.zeros(self.wfm_size, dtype=np.float32)
@@ -38,8 +35,6 @@ class Spectrum(object):
         self.demod[1, :] = 0
 
         self.noise_floor = np.zeros(self.wfm_size, dtype=np.float32)
-
-        # self.set_offset(0, 0)
 
         self.set_address_range(0, 0)
 
@@ -205,23 +200,9 @@ class Spectrum(object):
 
     def get_peak_values(self):
         @command(classname='Spectrum')
-        def store_peak_fifo_data(self):
-            return self.client.recv_uint32()
-
-        self.peak_stream_length = store_peak_fifo_data(self)
-
-        @command(classname='Spectrum')
         def get_peak_fifo_data(self):
             return self.client.recv_vector(dtype='uint32')
+        data = get_peak_fifo_data(self)
+        print(self.get_peak_address())
+        return data
 
-        return get_peak_fifo_data(self)
-
-    @command()
-    def get_peak_fifo_length(self):
-        return self.client.recv_uint32()
-
-    @command()
-    def fifo_start_acquisition(self, acq_period): pass
-
-    @command()
-    def fifo_stop_acquisition(self): pass
